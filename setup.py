@@ -1,16 +1,12 @@
 #!/usr/bin/env python3
 from setuptools import setup, find_packages
-import os,sys
-
-if not sys.version_info[0] == 3:
-    print("Sorry, Python 2 is not supported (yet)")
-    sys.exit(1)
+import os
 here = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(here,"README.rst"),"r",encoding='utf-8') as f:
 	long_description = f.read()
 
 setup(name='yad',
-	version='0.8.0',
+	version='0.9.0',
 	description='A python interface for the Yad program',
 	author='Sagar D V',
 	author_email='dvenkatsagar@gmail.com',
@@ -28,6 +24,5 @@ setup(name='yad',
     'Programming Language :: Python :: 3.3',
     'Programming Language :: Python :: 3.4',
 	],
-	install_requires=['pexpect>=3.3'],
+	install_requires=['pexpect>=3.3','imghdr','re','signal','tempfile'],
 	py_modules=["yad"])
-
