@@ -24,5 +24,5 @@ setup(name='yad',
     'Programming Language :: Python :: 3.3',
     'Programming Language :: Python :: 3.4',
 	],
-	install_requires=['pexpect>=3.3','imghdr','re','signal','tempfile'],
+	install_requires=['pexpect>=3.3'],
 	py_modules=["yad"])
