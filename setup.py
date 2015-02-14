@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 import os
 here = os.path.abspath(os.path.dirname(__file__))
-with open(os.path.join(here,"README.rst"),"r",encoding='utf-8') as f:
+with open(os.path.join(here,"README.rst"),"r") as f:
 	long_description = f.read()
 
 setup(name='yad',
