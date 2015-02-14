@@ -1,6 +1,12 @@
 [Current]
 ^^^^^^^^^
 
+-  `b90faf3 <../../commit/b90faf3>`__ - **(dvenkatsagar)** Fixed
+   CHANGELOG output. #vpat++
+
+0.9.2
+^^^^^
+
 -  `3435d5c <../../commit/3435d5c>`__ - **(dvenkatsagar)** Fixed
    CHANGELOG output. #vpat++
 
