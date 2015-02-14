@@ -417,8 +417,8 @@ class YAD:
                 retval = child.read()
                 child.close()
                 rc = child.exitstatus
-                if rc == 0:
-                    return retval
+                return rc
+
 
         if listen:
             if plug: raise Exception("Error: 'plug' and 'listen' cannot be used together")
@@ -431,8 +431,7 @@ class YAD:
         else:
             if plug: return args
             retval,rc = self.execute(args=args)
-            if rc == 0:
-                return retval
+            return rc
 
 
     # File Selection Dialog
