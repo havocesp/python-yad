@@ -54,50 +54,57 @@ Example:
     yad.Calendar()
 
 Each function takes optional kwargs parameters which allows the use of general yad parameters.
-The kwargs that can be used are:
-
--	"center",
--	"print-xid",
--	"image-on-top",
--	"no-buttons",
--	"no-markup",
--	"always-print-result",
--	"dialog-sep",
--	"sticky",
--	"fixed",
--	"mouse",
--	"on-top",
--	"undecorated",
--	"skip-taskbar",
--	"maximized",
--	"fullscreen",
--	"selectable-labels"
--	"window_icon",
--	"timeout_indicator",
--	"kill_parent",
--	"print_xid",
--	"text_align",
--	"no_buttons",
--	"buttons_layout",
--	"no_markup",
--	"always_print_result",
--	"dialog_sep",
--	"on_top",
--	"skip_taskbar",
--	"selectable_labels",
--	"image_path",
 """
+signal(SIGPIPE,SIG_DFL)
 class YAD:
     """The main class used as the interface to Yad."""
     def __init__(self,exefile='/usr/bin/yad',shell='/bin/bash'):
         """
         Attributes:
-            yad (str)	:	string representing the yad program.
-            shell (str) :   string representing the systems shell i.e bash,kshell,cshell.
+            yad (str) :	string representing the yad program.
+            shell (str) : string representing the systems shell i.e bash,kshell,cshell.
+            args (list|tuple, optional) : An array of arguments for yad. Format = ["--ARG=VALUE"]. check 'man yad' for available values.
+
+        Note:
+            General key word arguments of python-yad are:
+                center (bool, optional) : Place window on center of screen
+                print_xid (bool, optional) : Print X Window Id of a dialog window to the stderr.
+                image_on_top (bool, optional) : Show image above main widget instead of left. This option is always on for print dialog.
+                no_buttons (bool,optional): Don't show buttons.
+                no_markup (bool, optional): Don't use pango markup in dialog's text.
+                always_print_result (bool, optional) : Always print result.
+                dialog_sep (bool, optional) : Show separator between dialog and buttons. Works only with gtk+-2.0.
+                sticky (bool, optional) : Make window visible on all desktops.
+                fixed (bool, optional) : Make window fixed width and height.
+                mouse (bool, optional) : Place window under mouse position.
+                on_top (bool, optional) : Place window over other windows.
+            	undecorated (bool, optional) : Make window undecorated (remove title and window borders).
+            	skip_taskbar (bool, optional) : Don't show window in taskbar and pager.
+            	maximized (bool, optional) : Run dialog window maximized.
+            	fullscreen (bool, optional) : Run dialog in fullscreen mode. This option may not work on all window managers.
+            	selectable_labels (bool, optional) :  If set, user can select dialog's text and copy it to clipboard.  This option also affects on label fields in form dialog.
+            	window_icon (str, optional) : Set the window icon.
+                timeout (int, optional) : Set the dialog timeout in seconds.
+            	timeout_indicator (bool, optional) : Set the dialog timeout in seconds.
+            	kill_parent (signal, optional) : Send SIGNAL to parent process. Default value of SIGNAL is a SIGTERM.
+                            SIGNAL may be specified by it's number or symbolic name with or without SIG prefix. See signal(7) for details about signals.
+            	text_align (str, optional) : Set type of dialog text justification. TYPE may be left, right, center or fill.
+            	buttons_layout (str, optional) : Set buttons layout type. Possible types are: spread, edge, start, end or center.  Default is end.
+            	on_top (bool, optional) : Place window over other windows.
+            	skip_taskbar (bool, optional) :  Don't show window in taskbar and pager.
+            	image (str, optional) : Set the dialog image which appears on the left side of dialog. IMAGE might be file name or icon name from current icon theme.
+                text(str, optional) : Set the dialog text.
+                title (str, optional) : Set the dialog title.
+                width (int, optional) : Set the dialog width.
+                height (int, optional) : Set the dialog height.
+                expander (str, optional) : Hide main widget with expander. TEXT is an optional argument with expander's label.
+                borders (int, optional) : Set dialog window borders.
+                fullscreen (bool, optional) : Run dialog in fullscreen mode. This option may not work on all window managers.
+                geometry (str, optional) : Use standard X Window geometry notation for placing dialog.  When this option is used, width, height, mouse and center options are ignored.
+                rest (str, optional) : Read extra arguments from given file instead of command line. Each line of a file treats as a single argument.
         """
         self.yad = str(exefile)
         self.shell = str(shell)
-        signal(SIGPIPE,SIG_DFL)
 
     # Calendar Dialog
     def Calendar(self,day=None,month=None,year=None,details=None,plug=False,**kwargs):
@@ -1441,14 +1448,16 @@ class YAD:
         'kill_parent' : 'kill-parent','print_xid' : 'print-xid','text_align' : 'text-align',
         'no_buttons' : 'no-buttons','buttons_layout' : 'buttons-layout','no_markup' : 'no-markup',
         'always_print_result' : 'always-print-result','dialog_sep' : 'dialog-sep',
-        'on_top' : 'on-top','skip_taskbar' : 'skip-taskbar',
-        'selectable_labels' : 'selectable-labels','image_path' : 'image-path'}
+        'on_top' : 'on-top','skip_taskbar' : 'skip-taskbar', 'selectable_labels' : 'selectable-labels',
+        'image_path' : 'image-path'}
 
         for param, value in kwargs.items():
             param = generic.get(param, param)
             if param in generic_bool:
                 if value:
                     args.append((param))
+            elif param.startswith("button"):
+                args.append(("button",value))
             else:
                 args.append((param, value))
         return args
