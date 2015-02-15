@@ -1,20 +1,17 @@
 [Current]
 ^^^^^^^^^
 
+-  `63a9ee5 <../../commit/63a9ee5>`__ - **(dvenkatsagar)** Added general
+   multi-button support. Added example applications. Update program
+   documentation. #vpat++
+-  `c17f6f2 <../../commit/c17f6f2>`__ - **(dvenkatsagar)** FIxed some
+   issues with the Progress bars
+-  `2633601 <../../commit/2633601>`__ - **(dvenkatsagar)** Fixed Version
+   Numbers
+-  `8153d0b <../../commit/8153d0b>`__ - **(dvenkatsagar)** version
+   update: 0.9.3
 -  `b90faf3 <../../commit/b90faf3>`__ - **(dvenkatsagar)** Fixed
    CHANGELOG output. #vpat++
-
-0.9.2
-^^^^^
-
--  `3435d5c <../../commit/3435d5c>`__ - **(dvenkatsagar)** Fixed
-   CHANGELOG output. #vpat++
-
-0.9.1
-^^^^^
-
--  `4d2eb47 <../../commit/4d2eb47>`__ - **(dvenkatsagar)** Fixed
-   CHANGELOGS. #vpat++
 -  `29e95a5 <../../commit/29e95a5>`__ - **(dvenkatsagar)** Fixed the
    changelog to changelog.md
 
