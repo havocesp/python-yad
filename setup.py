@@ -6,7 +6,7 @@ with open(os.path.join(here,"README.rst"),"r") as f:
 	long_description = f.read()
 
 setup(name='yad',
-	version='0.9.0',
+	version='0.9.1',
 	description='A python interface for the Yad program',
 	author='Sagar D V',
 	author_email='dvenkatsagar@gmail.com',
