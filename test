@@ -117,6 +117,9 @@ def note(yad):
     w = yad.Notebook(12345,tabpos='bottom',tabs=tabs)
     print(w)
 
+def general(yad):
+    x = yad.execute(center=True,title="Test",text="This is a test")
+
 dic = {
 "calendar" : cal,
 "color" : col,
@@ -137,9 +140,10 @@ dic = {
 "prog1" : prog1,
 "prog2" : prog2,
 "form" : form,
-"note" : note
+"note" : note,
+"gen" : general
 }
 
 for param,value in dic.items():
-    if param == "prog2":
+    if param == "gen":
         value(yad)

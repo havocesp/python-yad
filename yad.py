@@ -38,7 +38,7 @@ import pexpect
 import tempfile
 __all__ = ['Calendar','Color','DND','Entry','Icon','File','Font','List','Progress','MultiProgress','Scale','Print','Notify','Form','TextInfo','Notebook']
 
-__version__ = "0.9.0"
+__version__ = "0.9.1"
 
 __doc__ = """python-yad is interface to yad for python. Inspired by the PyZenity Project.
 
@@ -54,50 +54,57 @@ Example:
     yad.Calendar()
 
 Each function takes optional kwargs parameters which allows the use of general yad parameters.
-The kwargs that can be used are:
-
--	"center",
--	"print-xid",
--	"image-on-top",
--	"no-buttons",
--	"no-markup",
--	"always-print-result",
--	"dialog-sep",
--	"sticky",
--	"fixed",
--	"mouse",
--	"on-top",
--	"undecorated",
--	"skip-taskbar",
--	"maximized",
--	"fullscreen",
--	"selectable-labels"
--	"window_icon",
--	"timeout_indicator",
--	"kill_parent",
--	"print_xid",
--	"text_align",
--	"no_buttons",
--	"buttons_layout",
--	"no_markup",
--	"always_print_result",
--	"dialog_sep",
--	"on_top",
--	"skip_taskbar",
--	"selectable_labels",
--	"image_path",
 """
+signal(SIGPIPE,SIG_DFL)
 class YAD:
     """The main class used as the interface to Yad."""
     def __init__(self,exefile='/usr/bin/yad',shell='/bin/bash'):
         """
         Attributes:
-            yad (str)	:	string representing the yad program.
-            shell (str) :   string representing the systems shell i.e bash,kshell,cshell.
+            yad (str) :	string representing the yad program.
+            shell (str) : string representing the systems shell i.e bash,kshell,cshell.
+            args (list|tuple, optional) : An array of arguments for yad. Format = ["--ARG=VALUE"]. check 'man yad' for available values.
+
+        Note:
+            General key word arguments of python-yad are:
+                center (bool, optional) : Place window on center of screen
+                print_xid (bool, optional) : Print X Window Id of a dialog window to the stderr.
+                image_on_top (bool, optional) : Show image above main widget instead of left. This option is always on for print dialog.
+                no_buttons (bool,optional): Don't show buttons.
+                no_markup (bool, optional): Don't use pango markup in dialog's text.
+                always_print_result (bool, optional) : Always print result.
+                dialog_sep (bool, optional) : Show separator between dialog and buttons. Works only with gtk+-2.0.
+                sticky (bool, optional) : Make window visible on all desktops.
+                fixed (bool, optional) : Make window fixed width and height.
+                mouse (bool, optional) : Place window under mouse position.
+                on_top (bool, optional) : Place window over other windows.
+            	undecorated (bool, optional) : Make window undecorated (remove title and window borders).
+            	skip_taskbar (bool, optional) : Don't show window in taskbar and pager.
+            	maximized (bool, optional) : Run dialog window maximized.
+            	fullscreen (bool, optional) : Run dialog in fullscreen mode. This option may not work on all window managers.
+            	selectable_labels (bool, optional) :  If set, user can select dialog's text and copy it to clipboard. This option also affects on label fields in form dialog.
+            	window_icon (str, optional) : Set the window icon.
+                timeout (int, optional) : Set the dialog timeout in seconds.
+            	timeout_indicator (bool, optional) : Set the dialog timeout in seconds.
+            	kill_parent (signal, optional) : Send SIGNAL to parent process. Default value of SIGNAL is a SIGTERM. SIGNAL may be specified by it's number or symbolic name with or without SIG prefix. See signal(7) for details about signals.
+            	text_align (str, optional) : Set type of dialog text justification. TYPE may be left, right, center or fill.
+            	buttons_layout (str, optional) : Set buttons layout type. Possible types are: spread, edge, start, end or center.  Default is end.
+            	on_top (bool, optional) : Place window over other windows.
+            	skip_taskbar (bool, optional) :  Don't show window in taskbar and pager.
+            	image (str, optional) : Set the dialog image which appears on the left side of dialog. IMAGE might be file name or icon name from current icon theme.
+                text(str, optional) : Set the dialog text.
+                title (str, optional) : Set the dialog title.
+                width (int, optional) : Set the dialog width.
+                height (int, optional) : Set the dialog height.
+                expander (str, optional) : Hide main widget with expander. TEXT is an optional argument with expander's label.
+                borders (int, optional) : Set dialog window borders.
+                fullscreen (bool, optional) : Run dialog in fullscreen mode. This option may not work on all window managers.
+                geometry (str, optional) : Use standard X Window geometry notation for placing dialog.  When this option is used, width, height, mouse and center options are ignored.
+                rest (str, optional) : Read extra arguments from given file instead of command line. Each line of a file treats as a single argument.
+                button (str, optional) : Add  the dialog button. May be used multiply times. ID is an exit code or a command. BUTTON may be gtk stock item name for predefined buttons (like gtk-close or gtk-ok) or text in a form LABEL[!ICON[!TOOLTIP]] where `!' is an item separator. Full list of stock items may be found in gtk-demo program, in snippet called "Stock Items and Icon Browser". If no buttons specified OK and Cancel buttons used. See EXIT STATUS section for more. If ID have a non-numeric value it treats like a command and click on such button doesn't close the dialog.
         """
         self.yad = str(exefile)
         self.shell = str(shell)
-        signal(SIGPIPE,SIG_DFL)
 
     # Calendar Dialog
     def Calendar(self,day=None,month=None,year=None,details=None,plug=False,**kwargs):
@@ -105,17 +112,17 @@ class YAD:
         This will raise a Yad Calendar Dialog for the user to pick a date.
 
         Args:
-            day (int, optional)	:	Day of pre-selected date.
-            day (int, optional)	:	Day of pre-selected date.
-            month (int, optional)	:	Month of pre-selected date.
-            year (int, optional)	:	Year of pre-selected date.
-            details (str, optional)	:	File with days details. Format = <date> <description>
+            day (int, optional) : Day of pre-selected date.
+            day (int, optional) : Day of pre-selected date.
+            month (int, optional) :Month of pre-selected date.
+            year (int, optional) : Year of pre-selected date.
+            details (str, optional) : File with days details. Format = <date> <description>
                             date field is date in format, specified as '%m/%d/%Y'.
                             Description is a string with date details, which may include Pango markup.
-            **kwargs		:	Optional command line parameters for Yad such as height,width,title etc.
+            **kwargs : Optional command line parameters for Yad such as height,width,title etc.
 
         Returns:
-            obj			:	datetime.date obj representing the date.
+            obj : datetime.date obj representing the date.
 
         Raises:
             TypeError,IOError
@@ -162,13 +169,13 @@ class YAD:
         This will raise a Yad Color Dialog for the user to pick a color.
 
         Args:
-            color (str, optional)	:	Value for color. Should start with '#'.
-            extra (bool, optional)	:	Display extra information.
-            palette (str, optional)	:	File which has palette information
-            **kwargs		:	Optional command line parameters for Yad such as height,width,title etc.
+            color (str, optional) : Value for color. Should start with '#'.
+            extra (bool, optional) : Display extra information.
+            palette (str, optional) : File which has palette information
+            **kwargs : Optional command line parameters for Yad such as height,width,title etc.
 
         Returns:
-            str			:	A string representing the string
+            str : A string representing the string
 
         Raises:
             ValueError,TypeError
@@ -208,12 +215,12 @@ class YAD:
         This will raise a Yad DND Dialog for the user.
 
         Args:
-            cmd (str, optional)		:	Executes as a command when something is dropped.
-            tooltip (bool, optional)	:	Use the dialog text as tooltip.
-            **kwargs			:	Optional command line parameters for Yad such as height,width,title etc.
+            cmd (str, optional)	: Executes as a command when something is dropped.
+            tooltip (bool, optional) : Use the dialog text as tooltip.
+            **kwargs : Optional command line parameters for Yad such as height,width,title etc.
 
         Returns:
-            str				:	Filename or text or output of command that is dropped.
+            str	: Filename or text or output of command that is dropped.
 
         Raises:
             TypeError
@@ -244,21 +251,21 @@ class YAD:
         This will raise a Yad Combo Box Entry Dialog for the user.
 
         Args:
-            label (str, optional)		:	Entry label text.
-            text (str, optional)		:	Entry text.
-            hide_text (bool, optional)	:	Hide the entry text. Can then be used as passwords.
-            use_completion (bool, optional)	:	Use completion.
-            editable (bool, optional)	:	Make entries editable.
-            numeric (list|tuple)		:	Array size 4. Format = [min,max,step,precision].
-            licon (str, optional)		:	Icon displayed on the left of the entry
-            licon_action (str, optional)	:	command to be executed when licon is clicked.
-            ricon (str, optional)		:	icon displayed on the right of the entry
-            ricon_action(str, optional)	:	command to be executed when ricon is clicked.
-            data (list|tuple)		:	1D array representing the entries of combo box
-            **kwargs			:	Optional command line parameters for Yad such as height,width,title etc.
+            label (str, optional) : Entry label text.
+            text (str, optional) : Entry text.
+            hide_text (bool, optional) : Hide the entry text. Can then be used as passwords.
+            use_completion (bool, optional) : Use completion.
+            editable (bool, optional) : Make entries editable.
+            numeric (list|tuple) : Array size 4. Format = [min,max,step,precision].
+            licon (str, optional) : Icon displayed on the left of the entry
+            licon_action (str, optional) : command to be executed when licon is clicked.
+            ricon (str, optional) : icon displayed on the right of the entry
+            ricon_action(str, optional) : command to be executed when ricon is clicked.
+            data (list|tuple) : 1D array representing the entries of combo box
+            **kwargs : Optional command line parameters for Yad such as height,width,title etc.
 
         Returns:
-            str				:	Output of the text entered.
+            str : Output of the text entered.
 
         Raises:
             TypeError, FileNotFoundError
@@ -324,19 +331,19 @@ class YAD:
         """Shows a Icon Box which can also execute various command for each icon.
 
         Args:
-            dir (str)			:	Folder to read icons from. It reads the .desktop files in the folder.
-            use_generic (bool, optional)	:	Use GenericName instead of Name for shortcut label.
-            sort_by_name (bool, optional)	:	Use field name instead of filename for sorting items.
-            descend (bool, optional)	:	Sort items in descending order.
-            listen (bool, optional)		:	Read from stdin. See `man yad` for more information.
-            item_width (int, optional)	:	Set width of items.
-            compact (bool, optional)	:	Use compact mode.
-            single_click (bool, optional)	:	Allow single click to activate items.
-            term (str, optional)		:	A pattern used for terminal. (default: 'xterm -e %s')
-            **kwargs			:	Optional command line parameters for Yad such as height,width,title etc.
+            dir (str) : Folder to read icons from. It reads the .desktop files in the folder.
+            use_generic (bool, optional) : Use GenericName instead of Name for shortcut label.
+            sort_by_name (bool, optional) : Use field name instead of filename for sorting items.
+            descend (bool, optional) : Sort items in descending order.
+            listen (bool, optional) : Read from stdin. See `man yad` for more information.
+            item_width (int, optional) : Set width of items.
+            compact (bool, optional) : Use compact mode.
+            single_click (bool, optional) : Allow single click to activate items.
+            term (str, optional) : A pattern used for terminal. (default: 'xterm -e %s')
+            **kwargs : Optional command line parameters for Yad such as height,width,title etc.
 
         Returns:
-            callback|returncode		:	callback function or return exit code for 'listen'
+            callback|returncode : callback function or return exit code for 'listen'
                                 Args:
                                     name (str, optional) : name of icon to send
                                     tooltip (str, optional) : tooltip to display
@@ -417,8 +424,8 @@ class YAD:
                 retval = child.read()
                 child.close()
                 rc = child.exitstatus
-                if rc == 0:
-                    return retval
+                return rc
+
 
         if listen:
             if plug: raise Exception("Error: 'plug' and 'listen' cannot be used together")
@@ -431,8 +438,7 @@ class YAD:
         else:
             if plug: return args
             retval,rc = self.execute(args=args)
-            if rc == 0:
-                return retval
+            return rc
 
 
     # File Selection Dialog
@@ -441,18 +447,18 @@ class YAD:
         """Shows a File Selection Dialog from which the user can choose a file.
 
         Args:
-            filename (str, optional)		:	File to used as pre-selected option.
-            multi (bool, optional)			:	Allows selection of multiple files.
-            dir (bool, optional)			:	Allows only selection of directories.
-            save (bool, optional)			:	Activate save mode.
-            sep (str, optional)			:	character used as separator when returning multiple items.
-            preview (bool, optional)		:	Add a preview widget to the file dialog.
-            quoted (bool, optional)			:	Output values will be shell-style quoted.
-            filters (list|tuple, optional)		:	Add a file filter. format ((NAME,PATTERN),(NAME,PATTERN),...).
-            **kwargs				:	Optional command line parameters for Yad such as height,width,title etc.
+            filename (str, optional) : File to used as pre-selected option.
+            multi (bool, optional) : Allows selection of multiple files.
+            dir (bool, optional) : Allows only selection of directories.
+            save (bool, optional) : Activate save mode.
+            sep (str, optional) : character used as separator when returning multiple items.
+            preview (bool, optional) : Add a preview widget to the file dialog.
+            quoted (bool, optional) : Output values will be shell-style quoted.
+            filters (list|tuple, optional) : Add a file filter. format ((NAME,PATTERN),(NAME,PATTERN),...).
+            **kwargs : Optional command line parameters for Yad such as height,width,title etc.
 
         Returns:
-            list					:	List of filenames
+            list : List of filenames
 
         Raises:
             TypeError
@@ -502,12 +508,12 @@ class YAD:
         """Prompts the user to select a font.
 
         Args:
-            font (list|tuple, optional)	:	1D array representing the font. Format = ['Family-list','style-options','size'].
-            preview (bool, optional)	:	Set preview text.
-            **kwargs			:	Optional command line parameters for Yad such as height,width,title etc.
+            font (list|tuple, optional) : 1D array representing the font. Format = ['Family-list','style-options','size'].
+            preview (bool, optional) : Set preview text.
+            **kwargs : Optional command line parameters for Yad such as height,width,title etc.
 
         Returns:
-            str				:	Font and size
+            str : Font and size
 
         Raises:
             TypeError
@@ -541,29 +547,29 @@ class YAD:
         """Shows a List Dialog box which allows the user to select an item.
 
         Args:
-            colnames (list|tuple, optional)	:	1D array of Names of all the columns in the Dialog
-            boolstyle (bool, optional)	:	Should be either ["checklist","radiolist"]
-            sep (str, optional)		:	Character used as separator when returning multiple items.
-            multi (bool, optional)		:	Allow multiple item selection.
-            editable (bool, optional)	:	Allow editing of items.
-            no_headers (bool, optional)	:	Dont Show Column Headers
-            no_click (bool, optional)	:	Disable sorting of column content by clicking on its header.
-            print_all (bool, optional)	:	Print all data from the list.
-            print_col (int, optional)	:	Print the specific column number. default = 0 (print all columns).
-            hide_col (int, optional)	:	Hide specific column
-            expand_col (int, optional)	:	Set the column expandable by default. default = 0 (sets all columns expandable).
-            search_col (int, optional)	:	Set the quick search column. 0 mean to disable searching. By default search made on first column.
-            limit (int, optional)		:	Set the number of rows in list dialog. Will be shown only the last NUMBER rows.
-            ellipsize (str, optional)	:	Set ellipsize mode for text columns. Must be either ['NONE','START','MIDDLE','END'].
-            dclick_action (str, optional)	:	Set the CMD as a double-click command. See `man yad` for more information.
-            regex (str, optional)		:	Use regular expressions in search for text fields.
-            listen (bool, optional)		:	Read from stdin. See `man yad` for more information.
-            quoted (bool, optional)		:	Output values will be shell-style quoted.
-            data (list|tuple, optional)	:	Multi-dimensional array. The size of the row's array must be equal to the number of columns.
-            **kwargs			:	Optional command line parameters for Yad such as height,width,title etc.
+            colnames (list|tuple, optional) : 1D array of Names of all the columns in the Dialog
+            boolstyle (bool, optional) : Should be either ["checklist","radiolist"]
+            sep (str, optional) : Character used as separator when returning multiple items.
+            multi (bool, optional) : Allow multiple item selection.
+            editable (bool, optional) : Allow editing of items.
+            no_headers (bool, optional) : Dont Show Column Headers
+            no_click (bool, optional) : Disable sorting of column content by clicking on its header.
+            print_all (bool, optional) : Print all data from the list.
+            print_col (int, optional) : Print the specific column number. default = 0 (print all columns).
+            hide_col (int, optional) : Hide specific column
+            expand_col (int, optional) : Set the column expandable by default. default = 0 (sets all columns expandable).
+            search_col (int, optional) : Set the quick search column. 0 mean to disable searching. By default search made on first column.
+            limit (int, optional) : Set the number of rows in list dialog. Will be shown only the last NUMBER rows.
+            ellipsize (str, optional) : Set ellipsize mode for text columns. Must be either ['NONE','START','MIDDLE','END'].
+            dclick_action (str, optional) : Set the CMD as a double-click command. See `man yad` for more information.
+            regex (str, optional) : Use regular expressions in search for text fields.
+            listen (bool, optional) : Read from stdin. See `man yad` for more information.
+            quoted (bool, optional) : Output values will be shell-style quoted.
+            data (list|tuple, optional) : Multi-dimensional array. The size of the row's array must be equal to the number of columns.
+            **kwargs : Optional command line parameters for Yad such as height,width,title etc.
 
         Returns:
-            list|callback			:	List of items or a callback function for 'listen'
+            list|callback : List of items or a callback function for 'listen'
                                 Args:
                                     data (list|tuple, optional) : Multi-Dimensional list or tuple of items to be passed
 
@@ -683,19 +689,19 @@ class YAD:
         """Sets a Notification icon in the message tray.
 
         Args:
-            cmd (str, optional)		:	Set the command running when clicked on the icon. Default action is quit if --listen not specified.
-            listen (bool, optional)		:	Read from stdin. See `man yad` for more information.
-            sep (str, optional)		:	Character used as separator when returning multiple items.
-            item_sep (str, optional)	:	Character used as separator when returning multiple sub-items.
-            menu (list|tuple, optional)	:	Multi-dimensional array representing the items of the indicator menu. Format = ((NAME,ACTION,ICON),(NAME,ACTION,ICON),...).
-            no_middle (bool, optional)	:	Disable exit on middle click.
-            hidden (bool, optional)		:	Dont show icon at startup.
-            icon (str, optional)		:	Icon for the indicator.
-            text (str, optional)		:	Tooltip text to be shown when user hovers on indicator.
-            **kwargs			:	Optional command line parameters for Yad such as height,width,title etc.
+            cmd (str, optional) : Set the command running when clicked on the icon. Default action is quit if --listen not specified.
+            listen (bool, optional) : Read from stdin. See `man yad` for more information.
+            sep (str, optional) : Character used as separator when returning multiple items.
+            item_sep (str, optional) : Character used as separator when returning multiple sub-items.
+            menu (list|tuple, optional) : Multi-dimensional array representing the items of the indicator menu. Format = ((NAME,ACTION,ICON),(NAME,ACTION,ICON),...).
+            no_middle (bool, optional) : Disable exit on middle click.
+            hidden (bool, optional) : Dont show icon at startup.
+            icon (str, optional) : Icon for the indicator.
+            text (str, optional) : Tooltip text to be shown when user hovers on indicator.
+            **kwargs : Optional command line parameters for Yad such as height,width,title etc.
 
         Returns:
-            str|callback			:	returns a string of the output of the command executed in the notification or a callback function for 'listen'.
+            str|callback : returns a string of the output of the command executed in the notification or a callback function for 'listen'.
                                 Args:
                                     icon (str, optional) : icon to display or update
                                     tooltip (str, optional) : tooltip to display
@@ -798,15 +804,15 @@ class YAD:
         """Shows a print dialog box.
 
         Args:
-            filename (str)			:	file to print.
-            type (str, optional)		:	type of file. Must either be TEXT,IMAGE,RAW.
-            headers (bool, optional)	:	Add headers to the top of page with filename and page number. This option doesn't work for RAW type.
-            preview (bool, optional)	:	Add Preview button to the print dialog. This option doesn't work for RAW type.
-            font (list|tuple, optional)	:	1D array representing the font. Format = ['Family-list','style-options','size'].
-            **kwargs			:	Optional command line parameters for Yad such as height,width,title etc.
+            filename (str) : file to print.
+            type (str, optional) : type of file. Must either be TEXT,IMAGE,RAW.
+            headers (bool, optional) : Add headers to the top of page with filename and page number. This option doesn't work for RAW type.
+            preview (bool, optional) : Add Preview button to the print dialog. This option doesn't work for RAW type.
+            font (list|tuple, optional) : 1D array representing the font. Format = ['Family-list','style-options','size'].
+            **kwargs : Optional command line parameters for Yad such as height,width,title etc.
 
         Returns:
-            bool				:	True
+            bool : True
 
         Raises:
             TypeError,ValueError,FileNotFoundError
@@ -856,21 +862,21 @@ class YAD:
         the contents of a file.  It returns the contents of the text box.
 
         Args:
-            filename (str)			:	file to read from.
-            editable (bool, optional)	:	Allow changes to text.
-            fore (str, optional)		:	Color to use as foreground color.
-            back (str, optional)		:	Color to use as background color.
-            font (list|tuple, optional)	:	1D array representing the font. Format = ['Family-list','style-options','size'].
-            wrap (bool, optional)		:	Enable text wrapping.
-            justify (str, optional)		:	Set justification. TYPE may be left, right, center or fill.  Default is left.
-            margins (int, optional)		:	Set text margins to SIZE.
-            tail (bool, optional)		:	Autoscroll to end when new text appears. Works only when text is read from stdin.
-            show_uri (bool, optional)	:	Make URI in text clickable. Links opens with xdg-open command.
-            listen (bool, optional)		:	Read from stdin. See `man yad` for more information.
-            **kwargs			:	Optional command line parameters for Yad such as height,width,title etc.
+            filename (str) : file to read from.
+            editable (bool, optional) : Allow changes to text.
+            fore (str, optional) : Color to use as foreground color.
+            back (str, optional) : Color to use as background color.
+            font (list|tuple, optional) : 1D array representing the font. Format = ['Family-list','style-options','size'].
+            wrap (bool, optional) : Enable text wrapping.
+            justify (str, optional) : Set justification. TYPE may be left, right, center or fill.  Default is left.
+            margins (int, optional) : Set text margins to SIZE.
+            tail (bool, optional) : Autoscroll to end when new text appears. Works only when text is read from stdin.
+            show_uri (bool, optional) : Make URI in text clickable. Links opens with xdg-open command.
+            listen (bool, optional) : Read from stdin. See `man yad` for more information.
+            **kwargs : Optional command line parameters for Yad such as height,width,title etc.
 
         Returns:
-            str|callback			:	Contents of text box or callback function for 'listen'
+            str|callback : Contents of text box or callback function for 'listen'
                                 Args:
                                     s (str, optional) : string to display in the textbox
 
@@ -968,20 +974,20 @@ class YAD:
         """Shows a scale Dialog. allows the user to select value between a range.
 
         Args:
-            value (int, optional)		:	Set initial value.
-            min (int, optional)		:	Set minimum value.
-            max (int, optional)		:	Set maximum value.
-            step (int, optional)		:	Set step size.
-            page (int, optional)		:	Set paging size. By default page value is STEP*10.
-            partial (bool, optional)	:	Print partial values.
-            hide (bool, optional)		:	Hide value.
-            vertical (bool, optional)	:	Show vertical scale.
-            invert (bool, optional)		:	Invert scale direction.
-            mark (list|tuple, optional)	:	Add a mark to scale. Format = (('NAME',VALUE),('NAME',VALUE),...)
-            **kwargs			:	Optional command line parameters for Yad such as height,width,title etc.
+            value (int, optional) : Set initial value.
+            min (int, optional) : Set minimum value.
+            max (int, optional) : Set maximum value.
+            step (int, optional) : Set step size.
+            page (int, optional) : Set paging size. By default page value is STEP*10.
+            partial (bool, optional) : Print partial values.
+            hide (bool, optional) : Hide value.
+            vertical (bool, optional) : Show vertical scale.
+            invert (bool, optional) : Invert scale direction.
+            mark (list|tuple, optional) : Add a mark to scale. Format = (('NAME',VALUE),('NAME',VALUE),...)
+            **kwargs : Optional command line parameters for Yad such as height,width,title etc.
 
         Returns:
-            int				:	Returns a int
+            int : Returns a int
 
         Raises:
             TypeError
@@ -1036,21 +1042,21 @@ class YAD:
             This function sends the SIGPIPE signal if the user hits the cancel button. You must connect to this signal if you do not want to get an error.
 
         Args:
-            text (str, optional)		:	Set text in progress bar.
-            percent (int, optional)		:	Set initial percentage.
-            rtl (bool, optional)		:	Set Right-To-Left progress bar direction.
-            autoclose (bool, optional)	:	Close dialog when 100% has been reached.
-            autokill (bool, optional)	:	Kill parent process if cancel button is pressed.
-            pulsate (bool, optional)	:	Pulsate progress bar.
-            log (str, optional)		:	Show log window. This window gathers all of lines from stdin, started from # instead of setting appropriate progress labels.
-            log_on_top (bool, optional)	:	Place log window above progress bar.
-            log_expanded (bool, optional)	:	Start with expanded log window.
-            log_height (int, optional)	:	Set the height of log window.
-            **kwargs			:	Optional command line parameters for Yad such as height,width,title etc.
+            text (str, optional) : Set text in progress bar.
+            percent (int, optional) : Set initial percentage.
+            rtl (bool, optional) : Set Right-To-Left progress bar direction.
+            autoclose (bool, optional) : Close dialog when 100% has been reached.
+            autokill (bool, optional) : Kill parent process if cancel button is pressed.
+            pulsate (bool, optional) : Pulsate progress bar.
+            log (str, optional) : Show log window. This window gathers all of lines from stdin, started from # instead of setting appropriate progress labels.
+            log_on_top (bool, optional) : Place log window above progress bar.
+            log_expanded (bool, optional) : Start with expanded log window.
+            log_height (int, optional) : Set the height of log window.
+            **kwargs : Optional command line parameters for Yad such as height,width,title etc.
 
 
         Returns:
-            callback			:	Returns a callback that accepts two arguments.
+            callback : Returns a callback that accepts two arguments.
                                 Args:
                                     percent (int|float):	set percentage of the bar.
                                     msg (str, optional):	message to be shown in the bar.
@@ -1104,11 +1110,11 @@ class YAD:
             """Call back function to update progress bar.
 
             Args:
-                percent (int|float)	:	set percentage of the bar.
-                msg (str, optional)	:	message to be shown in the bar.
+                percent (int|float) : set percentage of the bar.
+                msg (str, optional) : message to be shown in the bar.
 
             Returns:
-                status	:	returncode of the proc
+                status : returncode of the proc
             """
             if type(percent) == float:
                 percent = int(percent * 100)
@@ -1128,18 +1134,18 @@ class YAD:
             This function sends the SIGPIPE signal if the user hits the cancel button. You must connect to this signal if you do not want to get an error.
 
         Args:
-            bar (list|tuple, optional)	:	Adds progress bar. A multi-dimensional array. Format = ((LABEL,TYPE),(LABEL,TYPE),...). LABEL is a text label for progress bar.
+            bar (list|tuple, optional) : Adds progress bar. A multi-dimensional array. Format = ((LABEL,TYPE),(LABEL,TYPE),...). LABEL is a text label for progress bar.
                                 TYPE is a progress bar type. Types are: NORM for normal progress bar, RTL for inverted progress bar and PULSE for pulsate progress bar.
-            vertical (bool, optional)	:	Set vertical orientation of progress bars.
-            align (str, optional)		:	Set alignment of bar labels. Possible types are left, center or right. Default is left.
-            **kwargs			:	Optional command line parameters for Yad such as height,width,title etc.
+            vertical (bool, optional) : Set vertical orientation of progress bars.
+            align (str, optional) : Set alignment of bar labels. Possible types are left, center or right. Default is left.
+            **kwargs : Optional command line parameters for Yad such as height,width,title etc.
 
         Returns:
-            callback			:	Returns a callback that accepts two arguments.
+            callback : Returns a callback that accepts two arguments.
                                 Args:
-                                    percent (int|float):	set percentage of the bar.
-                                    bar (int):	bar number to update
-                                    msg (str, optional):	message to be shown in the bar.
+                                    percent (int|float): set percentage of the bar.
+                                    bar (int): bar number to update
+                                    msg (str, optional): message to be shown in the bar.
 
                                 Returns:
                                     status:	returncode of the proc
@@ -1183,12 +1189,12 @@ class YAD:
             """Call back function to update progress bar.
 
             Args:
-                percent (int|float)	:	set percentage of the bar.
-                bar (int)	:	bar number to update
-                msg (str, optional)	:	message to be shown in the bar.
+                percent (int|float) : set percentage of the bar.
+                bar (int) : bar number to update
+                msg (str, optional) : message to be shown in the bar.
 
             Returns:
-                status	:	returncode of the proc
+                status : returncode of the proc
             """
             if type(percent) == float:
                 percent = int(percent * 100)
@@ -1205,17 +1211,17 @@ class YAD:
         """Shows a Form Dialog.
 
         Args:
-            fields (list|tuple, optional)	:	Multi-dimensional array. see `man yad` for type of fields. Format = ((TYPE,LABEL,VALUE),(TYPE,LABEL,VALUE),...)
-            align (str, optional)		:	Set alignment of bar labels. Possible types are left, center or right. Default is left.
-            cols (int, optional)		:	Set number of columns in form. Fields will be placed from top to bottom.
-            sep (str, optional)		:	Character used as separator when returning multiple items.
-            item_sep (str, optional)	:	Character used as separator when returning multiple sub-items.
-            scroll (bool, optional)		:	Make form scrollable.
-            quoted (bool, optional)		:	Output values will be shell-style quoted.
-            **kwargs			:	Optional command line parameters for Yad such as height,width,title etc.
+            fields (list|tuple, optional) : Multi-dimensional array. see `man yad` for type of fields. Format = ((TYPE,LABEL,VALUE),(TYPE,LABEL,VALUE),...)
+            align (str, optional) : Set alignment of bar labels. Possible types are left, center or right. Default is left.
+            cols (int, optional) : Set number of columns in form. Fields will be placed from top to bottom.
+            sep (str, optional) : Character used as separator when returning multiple items.
+            item_sep (str, optional) : Character used as separator when returning multiple sub-items.
+            scroll (bool, optional) : Make form scrollable.
+            quoted (bool, optional) : Output values will be shell-style quoted.
+            **kwargs : Optional command line parameters for Yad such as height,width,title etc.
 
         Returns:
-            dictionary			:	dictionary output of all fields
+            dictionary : dictionary output of all fields
 
         Raises:
             IndexError, ValueError
@@ -1319,13 +1325,13 @@ class YAD:
             - It doesnt work if the other dialogs have 'listen' argument in it.
 
         Args:
-            key (int)   :   A unique key used by notebook. It will automatically keep the plug value.
+            key (int) : A unique key used by notebook. It will automatically keep the plug value.
             tabpos (str, optional)  :   Set the tabs position. Value may be top, bottom, left, or right.
-            border (int)    :   Set the tabs position. Value may be top, bottom, left, or right.
-            tabs (list|tuple)   :   A multi-dimensional list or tuple which represents the tab. Format = ((TABNAME,ARGS),(TABNAME,ARGS),...)
+            border (int)  : Set the tabs position. Value may be top, bottom, left, or right.
+            tabs (list|tuple) : A multi-dimensional list or tuple which represents the tab. Format = ((TABNAME,ARGS),(TABNAME,ARGS),...)
 
         Returns:
-            dictionary    :   outputs of all the tags
+            dictionary : outputs of all the tags
 
         Examples:
             >>> x = yad.execute(plug=True,text="This is tab1 text")
@@ -1393,11 +1399,11 @@ class YAD:
         """Exceutes yad using pexpect module.
 
         Args:
-            args (list|tuple, optional)	:	yad arguments can be passed here directly. Format = "--ARG=VALUE"
-            **kwargs			:	Optional command line parameters for Yad such as height,width,title etc.
+            args (list|tuple, optional) : yad arguments can be passed here directly. Format = "--ARG=VALUE"
+            **kwargs : Optional command line parameters for Yad such as height,width,title etc.
 
         Returns:
-            tuple				:	Returns the retval and returncode of the command executed
+            tuple : Returns the retval and returncode of the command executed
 
         Raises:
             TypeError
@@ -1442,52 +1448,16 @@ class YAD:
         'kill_parent' : 'kill-parent','print_xid' : 'print-xid','text_align' : 'text-align',
         'no_buttons' : 'no-buttons','buttons_layout' : 'buttons-layout','no_markup' : 'no-markup',
         'always_print_result' : 'always-print-result','dialog_sep' : 'dialog-sep',
-        'on_top' : 'on-top','skip_taskbar' : 'skip-taskbar',
-        'selectable_labels' : 'selectable-labels','image_path' : 'image-path'}
+        'on_top' : 'on-top','skip_taskbar' : 'skip-taskbar', 'selectable_labels' : 'selectable-labels',
+        'image_path' : 'image-path'}
 
         for param, value in kwargs.items():
             param = generic.get(param, param)
             if param in generic_bool:
                 if value:
                     args.append((param))
+            elif param.startswith("button"):
+                args.append(("button",value))
             else:
                 args.append((param, value))
         return args
-
-if __name__ == "__main__":
-    import time
-    yad = YAD()
-    x = yad.execute(plug=True,text="This is tab1 text")
-    y = yad.execute(plug=True,text="This is tab2 text")
-    z = yad.Calendar(plug=True,text="This is a tab3 calendar")
-    tabs =(
-    ("Tab1","log1.txt",x),
-    ("Tab2","log2.txt",y),
-    ("Tab3","log3.txt",z),
-    )
-    w = yad.Notebook(12345,tabpos='bottom',tabs=tabs)
-    print(w)
-    """
-    x = (
-            ("LBL","Well this is label"),
-            ("","Default text entry","hello there"),
-            ("H","Hidden label","Hidden text"),
-            ("NUM","Numeric",(0,0,100,1,2)),
-            ("CB","Combo box",("val1","^val2","val3")),
-            ("CBE","Editable Combo box",("val1","^val2","val3")),
-            ("FL","Select a file",""),
-            ("SFL","File to save",""),
-            ("DIR","Select Directory",""),
-            ("CDIR","Create Directory",""),
-            ("FN","Select Font",("Sans","Regular","12")),
-            ("MFL","Select Multiple files",""),
-            ("DT","Date",""),
-            ("SCL","Scale",""),
-            ("CLR","Color Palette",""),
-            ("TXT","Multi-line text entry",""),
-            ("CHK","Checkbox","true"),
-            ("BTN",("gtk-ok","","OK"),"echo hi\n"),
-        )
-    y = yad.Form(fields=x)
-    print(y)
-    """
