@@ -1,6 +1,20 @@
 [Current]
 ^^^^^^^^^
 
+-  `b7bd707 <../../commit/b7bd707>`__ - **(dvenkatsagar)** Removed Apps
+   and added them to a seperate repository. Will be coming soon.
+-  `cf7e99c <../../commit/cf7e99c>`__ - **(dvenkatsagar)** updated
+   setup.py version
+-  `591ed55 <../../commit/591ed55>`__ - **(dvenkatsagar)** Fixed small
+   bugs
+-  `f006c80 <../../commit/f006c80>`__ - **(dvenkatsagar)** updated
+   documentation
+
+0.9.1
+^^^^^
+
+-  `0357e5e <../../commit/0357e5e>`__ - **(dvenkatsagar)** version
+   update: 0.9.1
 -  `63a9ee5 <../../commit/63a9ee5>`__ - **(dvenkatsagar)** Added general
    multi-button support. Added example applications. Update program
    documentation. #vpat++
