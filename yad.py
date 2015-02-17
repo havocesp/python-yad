@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
 #!/usr/bin/env python
-
+# -*- coding: utf-8 -*-
 '''
 Name: yad.py
 Author:   D V Sagar
@@ -38,7 +37,7 @@ import pexpect
 import tempfile
 __all__ = ['Calendar','Color','DND','Entry','Icon','File','Font','List','Progress','MultiProgress','Scale','Print','Notify','Form','TextInfo','Notebook']
 
-__version__ = "0.9.1"
+__version__ = "0.9.2"
 
 __doc__ = """python-yad is interface to yad for python. Inspired by the PyZenity Project.
 
