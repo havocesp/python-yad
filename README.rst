@@ -19,6 +19,10 @@ Example:
 >>> yad = YAD()
 >>> yad.Calendar()
 
+You can even check out the test application 'gdie'(Gnome-desktop-item-editor).
+
+>>> gdie
+
 Requirements
 ============
 - Python 3.2 and above
