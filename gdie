@@ -27,6 +27,7 @@ THE SOFTWARE.
 '''
 
 import yad,os,stat
+__version__="1.0.0"
 defaults = {
 'home' : os.path.expanduser("~"),
 'user' : os.getenv("USER"),
