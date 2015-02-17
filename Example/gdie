@@ -32,7 +32,7 @@ defaults = {
 'home' : os.path.expanduser("~"),
 'user' : os.getenv("USER"),
 'sudo-user' : os.getenv("SUDO_USER"),
-'shell' : os.getenv("SHELL")
+'shell' : os.getenv("SHELL"),
 'template' : {
     'version' : '1.0',
     'name' : '',
