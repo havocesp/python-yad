@@ -94,7 +94,7 @@ while True:
                 f.write("Name=%s\n" % defaults['template']['name'])
                 f.write("Comment=%s\n" % defaults['template']['comment'])
                 if form[0] in fields[0][2][:-1]:
-                    f.write("Exec=%s -c '%s'\n" % (defaults['template']['shell'],defaults['template']['exec']))
+                    f.write("Exec=%s -c '%s'\n" % (defaults['shell'],defaults['template']['exec']))
                 else:
                     f.write("URL=%s\n" % form[2].strip())
                 f.write("Icon=%s\n" % defaults['template']['icon'])
