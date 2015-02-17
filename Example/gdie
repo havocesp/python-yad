@@ -1,0 +1,108 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+'''
+Name: gdie
+Author:   D V Sagar
+Created: 2/16/2015
+
+Copyright (c) 2013-2015 Sagar D V(dvenkatsagar@gmail.com)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+'''
+
+import yad,os,stat
+gdie_dir = os.path.abspath(os.path.dirname(__file__))
+defaults = {
+'home' : os.path.expanduser("~"),
+'user' : os.getenv("USER"),
+'sudo-user' : os.getenv("SUDO_USER"),
+'shell' : os.getenv("SHELL")
+'template' : {
+    'version' : '1.0',
+    'name' : '',
+    'comment' : '',
+    'exec' : '',
+    'launcher' : '',
+    'icon': os.path.join(gdie_dir,'gnome-panel-launcher.png'),
+    'terminal' : 'false',
+    'type' : 'Application',
+    'categories' : 'Application;',
+    }
+}
+
+if defaults['sudo-user'] == None:
+    d = os.path.join(defaults['home'],".local/share/applications/")
+else:
+    d = "/usr/share/applications/"
+
+yad = yad.YAD()
+fields = (
+("CB","Type",("Application","Application in terminal","location")),
+("","Name",""),
+("","Command",""),
+("FL","Icon",defaults['template']['icon']),
+("","Comment",""),
+("DIR","Launcher Location",d)
+)
+while True:
+    form = yad.Form(fields=fields,title="Gnome Desktop Entry Editor",window_icon=defaults['template']['icon'],center=True,width=480)
+    if form:
+        errors = []
+        for i in [1,2,4]:
+            if len(form[i].strip()) == 0:
+                errors.append(fields[i][1])
+        if errors:
+            error,rc = yad.execute(title="Gnome Desktop Entry Editor",
+            text="<b> Please fill out the "+", ".join(errors)+" fields. </b>",text_align="center",
+            image="gtk-dialog-error",window_icon=defaults['template']['icon'],center=True,
+            dialog_sep=True,button1="gtk-ok:0")
+            if rc == 0:
+                continue
+            else:
+                exit(1)
+        else:
+            if form[0] in fields[0][2][:-1]:
+                defaults['template']['type'] = 'Application'
+            else:
+                defaults['template']['type'] = 'Link'
+            if form[0] == fields[0][2][1]:
+                defaults['template']['terminal'] = 'true'
+            defaults['template']['name'] = form[1].strip()
+            defaults['template']['exec'] = form[2].strip()
+            defaults['template']['icon'] = form[3]
+            defaults['template']['comment'] = form[4].strip()
+            defaults['template']['launcher'] = form[5]
+
+            with open(os.path.join(defaults['template']['launcher'],form[1]+".desktop"),"w") as f:
+                f.write("[Desktop Entry]\n")
+                f.write("Version=%s\n" % defaults['template']['version'])
+                f.write("Name=%s\n" % defaults['template']['name'])
+                f.write("Comment=%s\n" % defaults['template']['comment'])
+                if form[0] in fields[0][2][:-1]:
+                    f.write("Exec=%s -c '%s'\n" % (defaults['template']['shell'],defaults['template']['exec']))
+                else:
+                    f.write("URL=%s\n" % form[2].strip())
+                f.write("Icon=%s\n" % defaults['template']['icon'])
+                f.write("Type=%s\n" % defaults['template']['type'])
+                f.write("Terminal=%s\n" % defaults['template']['terminal'])
+                f.write("Categories=%s\n" % defaults['template']['categories'])
+                st = os.stat(f.name)
+                os.chmod(f.name, st.st_mode | stat.S_IEXEC)
+            break
+    break
