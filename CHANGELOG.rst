@@ -1,6 +1,32 @@
 [Current]
 ^^^^^^^^^
 
+0.9.3
+^^^^^
+
+-  `418d2ec <../../commit/418d2ec>`__ - **(dvenkatsagar)** version
+   update: 0.9.3
+-  `6d245a7 <../../commit/6d245a7>`__ - **(dvenkatsagar)** Updating
+   Version and Adding to pypi. #vpat++
+-  `c7b7dac <../../commit/c7b7dac>`__ - **(dvenkatsagar)** Fixed few
+   bugs in the example gdie
+-  `39c7682 <../../commit/39c7682>`__ - **(dvenkatsagar)** Fixed the
+   README.rst
+-  `f316347 <../../commit/f316347>`__ - **(dvenkatsagar)** Fixed gdie
+-  `8e04657 <../../commit/8e04657>`__ - **(dvenkatsagar)** Fixed
+   Directory structure
+-  `1740e47 <../../commit/1740e47>`__ - **(dvenkatsagar)** Fixed bug in
+   gdie
+-  `72e7c33 <../../commit/72e7c33>`__ - **(dvenkatsagar)** update
+   changelog
+
+Conflicts: CHANGELOG.rst
+
+-  `14e59ac <../../commit/14e59ac>`__ - **(dvenkatsagar)** Made some
+   changes
+-  `235a49d <../../commit/235a49d>`__ - **(dvenkatsagar)** Fixed
+   changelog
+
 0.9.2
 ^^^^^
 
