@@ -1,6 +1,21 @@
 [Current]
 ^^^^^^^^^
 
+0.9.2
+^^^^^
+
+-  `0120e81 <../../commit/0120e81>`__ - **(dvenkatsagar)** version
+   update: 0.9.2
+-  `97d09de <../../commit/97d09de>`__ - **(dvenkatsagar)** Added an
+   Example Application. vpat++
+-  `552874a <../../commit/552874a>`__ - **(dvenkatsagar)** Uploaded
+   files to pypi
+
+0.9.1-r
+^^^^^^^
+
+-  `76c1947 <../../commit/76c1947>`__ - **(dvenkatsagar)** update
+   changelog. releasing 0.9.1
 -  `b7bd707 <../../commit/b7bd707>`__ - **(dvenkatsagar)** Removed Apps
    and added them to a seperate repository. Will be coming soon.
 -  `cf7e99c <../../commit/cf7e99c>`__ - **(dvenkatsagar)** updated
