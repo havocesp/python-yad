@@ -6,7 +6,7 @@ with open(os.path.join(here,"README.rst"),"r") as f:
 	long_description = f.read()
 
 setup(name='yad',
-	version='0.9.3',
+	version='0.9.4',
 	description='A python interface for the Yad program',
 	author='Sagar D V',
 	author_email='dvenkatsagar@gmail.com',
@@ -14,7 +14,7 @@ setup(name='yad',
 	maintainer_email='dvenkatsagar@gmail.com',
 	url='https://bitbucket.org/dvenkatsagar/python-yad.git',
 	download_url='https://dvenkatsagar@bitbucket.org/dvenkatsagar/python-yad/get/master.zip',
-	license='MIT',
+	license='GPL3',
 	long_description=long_description,
 	include_package_data=True,
 	classifiers=[
