@@ -30,9 +30,9 @@ import imghdr
 import random
 import pexpect
 import tempfile
-__all__ = ['Calendar','Color','DND','Entry','Icon','File','Font','List','Progress','MultiProgress','Scale','Print','Notify','Form','TextInfo','Notebook']
+__all__ = ['Calendar','Color','DND','Entry','Icon','File','Font','List','Progress','MultiProgress','Scale','Print','Notify','Form','TextInfo','Notebook', 'Html']
 
-__version__ = "0.9.3"
+__version__ = "0.9.5"
 
 __doc__ = """python-yad is interface to yad for python. Inspired by the PyZenity Project.
 
@@ -1417,6 +1417,37 @@ class YAD:
                 dic[i+1] = tf[i].read()
                 tf[i].close()
             return dic
+
+    def Html(self,uri=None,browser=False,print_uri=False, mime="text/html",encoding="UTF-8",plug=False,**kwargs):
+        """Creates a HTML Dialog.
+
+        Args:
+            uri (str, optional) : Open specified location. URI can be a filename or internet address. If URI is not an existing file and protocol is not specified a prefix http:// will be added to URI.
+            browser (bool, optional) : Turn on browser mode. In this mode all clicked links will be opened in html widget and command Open will be added to context menu.
+            print_uri (bool, optional) : Print clicked links to standard output. By default clicked links opens with xdg-open.
+            mime (str, optional) : Set mime type of data passed to standard input to MIME. Default is text/html.
+            encoding (str, optional) : Set encoding of data passed to standard input to ENCODING. Default is UTF-8.
+
+        Returns:
+            bool : Returns the status of the broswer.
+
+        """
+        args = ["--html"]
+
+        if uri: args.append("--uri=%s" % uri)
+
+        if browser: args.append("--browser")
+
+        if print_uri: args.append("--print-uri")
+
+        if mime: args.append("--mime='%s'" % mime)
+
+        if encoding: args.append("--encoding='%s'" % encoding)
+
+        if plug: return args
+        retval,rc = self.execute(args=args)
+        if rc == 0:
+            return retval
 
     # execute yad
     def execute(self,args=[],plug=False,**kwargs):
