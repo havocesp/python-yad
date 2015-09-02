@@ -1,6 +1,29 @@
 [Current]
 ^^^^^^^^^
 
+-  `7a62d9c <../../commit/7a62d9c>`__ - **(Sagar DV)** Added the Html
+   dialog. The functionality for the html dialog has been added but
+   wasnt able to test it as the original yad program was giving
+   segmentation faults.
+-  `fd85d34 <../../commit/fd85d34>`__ - **(Sagar DV)** Updated yad.py
+   with additional arguments. Various dialogs have been updated with
+   additional arguments. Check the src.
+-  `3c11fca <../../commit/3c11fca>`__ - **(Sagar DV)** Fixed setup.py
+
+0.9.4
+^^^^^
+
+-  `7fb6776 <../../commit/7fb6776>`__ - **(Sagar DV)** version update:
+   0.9.4
+-  `f565d9a <../../commit/f565d9a>`__ - **(Sagar DV)** Changed License
+   to GPL3. #vpat++
+
+0.9.3-r
+^^^^^^^
+
+-  `c927f3e <../../commit/c927f3e>`__ - **(dvenkatsagar)** Update
+   changelogs. and uploading to pypi completed
+
 0.9.3
 ^^^^^
 
