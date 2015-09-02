@@ -83,8 +83,6 @@ class YAD:
             	kill_parent (signal, optional) : Send SIGNAL to parent process. Default value of SIGNAL is a SIGTERM. SIGNAL may be specified by it's number or symbolic name with or without SIG prefix. See signal(7) for details about signals.
             	text_align (str, optional) : Set type of dialog text justification. TYPE may be left, right, center or fill.
             	buttons_layout (str, optional) : Set buttons layout type. Possible types are: spread, edge, start, end or center.  Default is end.
-            	on_top (bool, optional) : Place window over other windows.
-            	skip_taskbar (bool, optional) :  Don't show window in taskbar and pager.
             	image (str, optional) : Set the dialog image which appears on the left side of dialog. IMAGE might be file name or icon name from current icon theme.
                 text(str, optional) : Set the dialog text.
                 title (str, optional) : Set the dialog title.
@@ -92,16 +90,19 @@ class YAD:
                 height (int, optional) : Set the dialog height.
                 expander (str, optional) : Hide main widget with expander. TEXT is an optional argument with expander's label.
                 borders (int, optional) : Set dialog window borders.
-                fullscreen (bool, optional) : Run dialog in fullscreen mode. This option may not work on all window managers.
                 geometry (str, optional) : Use standard X Window geometry notation for placing dialog.  When this option is used, width, height, mouse and center options are ignored.
                 rest (str, optional) : Read extra arguments from given file instead of command line. Each line of a file treats as a single argument.
                 button (str, optional) : Add  the dialog button. May be used multiply times. ID is an exit code or a command. BUTTON may be gtk stock item name for predefined buttons (like gtk-close or gtk-ok) or text in a form LABEL[!ICON[!TOOLTIP]] where `!' is an item separator. Full list of stock items may be found in gtk-demo program, in snippet called "Stock Items and Icon Browser". If no buttons specified OK and Cancel buttons used. See EXIT STATUS section for more. If ID have a non-numeric value it treats like a command and click on such button doesn't close the dialog.
+                icon_theme (str, optional) :  Use specified GTK icon theme instead of default.
+                no_escape (bool, optional) : Don't close dialog if Escape was pressed.
+                image_path (str, optional) : Add specified path to the standard list of directories for looking for icons. This option can be used multiply times.
+                gtkrc (str, optional) : Read and parse additional GTK+ settings from given file.
         """
         self.yad = str(exefile)
         self.shell = str(shell)
 
     # Calendar Dialog
-    def Calendar(self,day=None,month=None,year=None,details=None,plug=False,**kwargs):
+    def Calendar(self,day=None,month=None,year=None,date_format="%x", details=None,plug=False,**kwargs):
         """Prompt the user for a date.
         This will raise a Yad Calendar Dialog for the user to pick a date.
 
@@ -110,6 +111,7 @@ class YAD:
             day (int, optional) : Day of pre-selected date.
             month (int, optional) :Month of pre-selected date.
             year (int, optional) : Year of pre-selected date.
+            date_format (str, optional) : Set the format for the date fields (same as in calendar dialog).
             details (str, optional) : File with days details. Format = <date> <description>
                             date field is date in format, specified as '%m/%d/%Y'.
                             Description is a string with date details, which may include Pango markup.
@@ -140,6 +142,8 @@ class YAD:
             try: args.append("--year=%d" % year)
             except TypeError: pass
 
+        if date_format: args.append("--date-format=%s" %date_format)
+
         if details:
             try:
                 os.stat(details)
@@ -158,7 +162,7 @@ class YAD:
             return date(year, month, day)
 
     # Color Dialog
-    def Color(self,color='#ffffff',extra=False,palette='/etc/X11/rgb.txt',plug=False,**kwargs):
+    def Color(self,color='#ffffff',extra=False,palette='/etc/X11/rgb.txt',alpha=False,mode="hex",plug=False,**kwargs):
         """Prompt the user to choose a color.
         This will raise a Yad Color Dialog for the user to pick a color.
 
@@ -166,6 +170,8 @@ class YAD:
             color (str, optional) : Value for color. Should start with '#'.
             extra (bool, optional) : Display extra information.
             palette (str, optional) : File which has palette information
+            alpha (bool, optional) : Add opacity to output color string.
+            mode (str, optional) : Set output color mode. Possible values are hex or rgb. Default is hex. HEX mode looks like #rrggbbaa, RGB mode - rgba(r, g, b, a).  In RGBA mode opacity have values from 0.0 to 1.0.
             **kwargs : Optional command line parameters for Yad such as height,width,title etc.
 
         Returns:
@@ -193,6 +199,13 @@ class YAD:
                 args.append("--palette='%s'" % palette)
             except FileNotFoundError:
                 raise FileNotFoundError("Invalid file for palette.")
+
+        if alpha: args.append("--alpha")
+
+        if mode:
+            if mode in ["hex","rgb"]:
+                args.append("--mode='%s'" % mode)
+            else: args.append("--mode='hex'")
 
         for generic_args in self.kwargs_helper(kwargs):
             try: args.append("--%s" % generic_args)
@@ -420,7 +433,6 @@ class YAD:
                 rc = child.exitstatus
                 return rc
 
-
         if listen:
             if plug: raise Exception("Error: 'plug' and 'listen' cannot be used together")
             cmd = " ".join([self.yad] + args)
@@ -437,7 +449,7 @@ class YAD:
 
     # File Selection Dialog
     def File(self,filename=None,multi=False,dir=False,save=False,sep='|',
-    preview=False,quoted=False,filters=None,**kwargs):
+    preview=False,quoted=False,confirm_overwrite=None,filters=None,**kwargs):
         """Shows a File Selection Dialog from which the user can choose a file.
 
         Args:
@@ -448,6 +460,7 @@ class YAD:
             sep (str, optional) : character used as separator when returning multiple items.
             preview (bool, optional) : Add a preview widget to the file dialog.
             quoted (bool, optional) : Output values will be shell-style quoted.
+            confirm_overwrite (str, optional) : Confirm file selection if filename already exists. Optional argument is a text for confirmation dialog.
             filters (list|tuple, optional) : Add a file filter. format ((NAME,PATTERN),(NAME,PATTERN),...).
             **kwargs : Optional command line parameters for Yad such as height,width,title etc.
 
@@ -479,6 +492,8 @@ class YAD:
         if preview: args.append("--add-preview")
 
         if quoted: args.append("--quoted-output")
+
+        if confirm_overwrite: args.append("--confirm-overwrite='%s'" % confirm_overwrite)
 
         if filters:
             for filt in filters:
@@ -541,7 +556,10 @@ class YAD:
         """Shows a List Dialog box which allows the user to select an item.
 
         Args:
-            colnames (list|tuple, optional) : 1D array of Names of all the columns in the Dialog
+            colnames (list|tuple, optional) : 2D array of Names of all the columns with type of the column in the Dialog. Set the column header. Types are TEXT, NUM, FLT, CHK, RD, IMG, HD or TIP.
+                                              TEXT type is default. Use NUM for integers and FLT for double values. TIP is used for define tooltip column. CHK (checkboxes) and RD (radio toggle) are a boolean columns.
+                                              HD type means a hidden column. Such columns are not displayes in the list, only in output. IMG may be path to image or icon name from currnet GTK+ icon theme.
+                                              Size of icons may be set in config file. Image field prints as empty value.
             boolstyle (bool, optional) : Should be either ["checklist","radiolist"]
             sep (str, optional) : Character used as separator when returning multiple items.
             multi (bool, optional) : Allow multiple item selection.
@@ -574,12 +592,18 @@ class YAD:
             TypeError,IndexError
 
         Examples:
-            >>> x = yad.List(colnames=("No","item","Description"),quoted=True,data=(("1","apple","An apple"),("2","orange","An orange")))
+            >>> x = yad.List(colnames=(("No","NUM"),("item","TEXT"),("Description","TEXT")),quoted=True,data=((1,"apple","An apple"),(2,"orange","An orange")))
             >>> print(x)
 
         """
         args = ["--list"]
-        for col in colnames: args.append("--column='%s'" % col)
+        #for col in colnames: args.append("--column='%s'" % col)
+        for cols in colnames:
+            if cols[1] in ["TEXT", "NUM", "FLT", "CHK", "RD", "IMG", "HD", "TIP"]:
+                args.append("--column=%s:%s" %(cols[0],cols[1]))
+            else:
+                print("Warning: The TYPE of 'column' must be either TEXT, NUM, FLT, CHK, RD, IMG, HD or TIP.")
+                args.append("--column=%s:TEXT" % cols[0])
 
         if boolstyle:
             if boolstyle in ['checklist','radiolist']:
@@ -1201,7 +1225,7 @@ class YAD:
         return update
 
     def Form(self,fields=[],align="left",cols=1,sep="|",item_sep="!",
-    scroll=False,quoted=False,plug=False,**kwargs):
+    scroll=False,quoted=False,date_format="%x",output_by_row=False,plug=False,**kwargs):
         """Shows a Form Dialog.
 
         Args:
@@ -1212,6 +1236,8 @@ class YAD:
             item_sep (str, optional) : Character used as separator when returning multiple sub-items.
             scroll (bool, optional) : Make form scrollable.
             quoted (bool, optional) : Output values will be shell-style quoted.
+            date_format (str, optional) : Set the format for the date fields (same as in calendar dialog).
+            output_by_row (bool, optional) : Output field values row by row if several columns is specified.
             **kwargs : Optional command line parameters for Yad such as height,width,title etc.
 
         Returns:
@@ -1292,6 +1318,10 @@ class YAD:
         if scroll: args.append("--scroll")
 
         if quoted: args.append("--quoted-output")
+
+        if date_format: args.append("--date-format=%s" %date_format)
+
+        if output_by_row: args.append("--output-by-row")
 
         if fields:
             for field in fields:
@@ -1434,7 +1464,7 @@ class YAD:
         "dialog-sep","sticky","fixed",
         "mouse","on-top","undecorated",
         "skip-taskbar","maximized","fullscreen",
-        "selectable-labels",'listen']
+        "selectable-labels",'listen','no-escape']
 
         # This is a dictionary of optional parameters that would create
         # syntax errors in python if they were passed in as kwargs.
@@ -1443,7 +1473,7 @@ class YAD:
         'no_buttons' : 'no-buttons','buttons_layout' : 'buttons-layout','no_markup' : 'no-markup',
         'always_print_result' : 'always-print-result','dialog_sep' : 'dialog-sep',
         'on_top' : 'on-top','skip_taskbar' : 'skip-taskbar', 'selectable_labels' : 'selectable-labels',
-        'image_path' : 'image-path'}
+        'image_path' : 'image-path', 'no_escape' : 'no-escape', 'image_path' : 'image-path', 'icon_theme' : 'icon-theme'}
 
         for param, value in kwargs.items():
             param = generic.get(param, param)
