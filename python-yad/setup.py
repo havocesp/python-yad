@@ -2,7 +2,8 @@
 from setuptools import setup, find_packages
 import os
 here = os.path.abspath(os.path.dirname(__file__))
-with open(os.path.join(here,"README.rst"),"r") as f:
+print();
+with open(os.path.join("/".join(here.split("/")[:-1]),"README.rst"),"r") as f:
 	long_description = f.read()
 
 setup(name='yad',
@@ -12,8 +13,8 @@ setup(name='yad',
 	author_email='dvenkatsagar@gmail.com',
 	maintainer='Sagar D V',
 	maintainer_email='dvenkatsagar@gmail.com',
-	url='https://bitbucket.org/dvenkatsagar/python-yad.git',
-	download_url='https://dvenkatsagar@bitbucket.org/dvenkatsagar/python-yad/get/master.zip',
+	url='https://gitlab.com/dvenkatsagar/python-yad/',
+	download_url='https://gitlab.com/dvenkatsagar/python-yad/repository/archive.zip',
 	license='GPL3',
 	long_description=long_description,
 	include_package_data=True,
