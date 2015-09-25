@@ -37,7 +37,8 @@ Can be installed by using pip:
 
 or by manual installation:
 
->>> git clone https://bitbucket.org/dvenkatsagar/python-yad.git
+>>> git clone https://gitlab.com/dvenkatsagar/python-yad.git
+>>> cd python-yad/python-yad
 >>> python3 setup.py build
 >>> python3 setup.py install
 
