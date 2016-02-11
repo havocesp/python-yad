@@ -32,7 +32,7 @@ import pexpect
 import tempfile
 __all__ = ['Calendar','Color','DND','Entry','Icon','File','Font','List','Progress','MultiProgress','Scale','Print','Notify','Form','TextInfo','Notebook', 'Html']
 
-__version__ = "0.9.5"
+__version__ = "0.9.7"
 
 __doc__ = """python-yad is interface to yad for python. Inspired by the PyZenity Project.
 
