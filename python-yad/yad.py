@@ -102,7 +102,7 @@ class YAD:
         self.shell = str(shell)
 
     # Calendar Dialog
-    def Calendar(self,day=None,month=None,year=None,date_format="%x", details=None,plug=False,**kwargs):
+    def Calendar(self,day=None,month=None,year=None,date_format='%x', details=None,plug=False,**kwargs):
         """Prompt the user for a date.
         This will raise a Yad Calendar Dialog for the user to pick a date.
 
@@ -121,7 +121,7 @@ class YAD:
             obj : datetime.date obj representing the date.
 
         Raises:
-            TypeError,IOError
+            TypeError,FileNotFoundError
 
         Examples:
             >>> x = yad.Calendar(day=1,month=1,year=15)
@@ -178,7 +178,7 @@ class YAD:
             str : A string representing the string
 
         Raises:
-            ValueError,TypeError
+            ValueError,TypeError,FileNotFoundError
 
         Examples:
             >>> x = yad.Color(color='#abcabc')
@@ -275,7 +275,7 @@ class YAD:
             str : Output of the text entered.
 
         Raises:
-            TypeError, FileNotFoundError
+            TypeError, FileNotFoundError, IndexError
 
         Examples:
             >>> x = yad.Entry(label="Pick a item",data=["apple","orange","banana"])
@@ -363,7 +363,7 @@ class YAD:
                                     status : returncode of the proc
 
         Raises:
-            TypeError, FileNotFoundError
+            TypeError, FileNotFoundError, FileNotFoundError
 
         Examples:
             >>> x = yad.Icons("/usr/share/applications",compact=True)
@@ -468,7 +468,7 @@ class YAD:
             list : List of filenames
 
         Raises:
-            TypeError
+            TypeError, IndexError
 
         Examples:
             >>> x = yad.File(quoted=True,multi=True,preview=True)
@@ -589,7 +589,7 @@ class YAD:
                                     list : returns the list of items selected.
 
         Raises:
-            TypeError,IndexError
+            TypeError, IndexError, ValueError
 
         Examples:
             >>> x = yad.List(colnames=(("No","NUM"),("item","TEXT"),("Description","TEXT")),quoted=True,data=((1,"apple","An apple"),(2,"orange","An orange")))
@@ -902,7 +902,7 @@ class YAD:
                                     str|returncode : either returns content of the box or return code depending on the parameters given to the main process
 
         Raises:
-            TypeError
+            TypeError, FileNotFoundError
 
         Examples:
             >>> x = yad.TextInfo("test.txt",editable=True,wrap=True,justify="fill",tail=True)
@@ -1305,8 +1305,6 @@ class YAD:
 
         if align in ["left","right","center"]:
             args.append("--align='%s'" % align)
-        else:
-            raise ValueError("'align' must either be left,right,or center.")
 
         try: args.append("--columns=%d" % cols)
         except TypeError: pass
@@ -1356,6 +1354,9 @@ class YAD:
 
         Returns:
             dictionary : outputs of all the tags
+
+        Raises:
+            TypeError
 
         Examples:
             >>> x = yad.execute(plug=True,text="This is tab1 text")
@@ -1436,7 +1437,7 @@ class YAD:
 
         if uri: args.append("--uri=%s" % uri)
 
-        if browser: args.append("--browser")
+        if browser: args.append("--browser")args = ["--notebook"]
 
         if print_uri: args.append("--print-uri")
 
@@ -1445,6 +1446,127 @@ class YAD:
         if encoding: args.append("--encoding='%s'" % encoding)
 
         if plug: return args
+        retval,rc = self.execute(args=args)
+        if rc == 0:
+            return retval
+
+    def Paned(self,key=None,orient="horizontal",splitter=None,tabs=[],**kwargs):
+        """Shows up a Paned Dialog. It is a special dialog that swallows other dialogs in it.
+        It identifies the other dialogs with the 'plug' option and uses a unique randomly generated key to create the dialog.
+        Please check example.
+
+        Note:
+            - It doesnt work if the other dialogs have 'listen' argument in it.
+
+        Args:
+            key (int) : A unique key used by notebook. It will automatically keep the plug value.
+            orient (str, optional)  :   Set orientation of panes inside dialog. TYPE may be in hor[izontal] or vert[ical].
+            splitter (int)  : Set the initial splitter position.
+            tabs (list|tuple) : A multi-dimensional list or tuple which represents the tab. Format = ((TABNAME,ARGS),(TABNAME,ARGS),...)
+
+        Returns:
+            dictionary : outputs of all the tags
+
+        Raises:
+            TypeError
+
+        Examples:
+            >>> x = yad.execute(plug=True,text="This is tab1 text")
+            >>> y = yad.execute(plug=True,text="This is tab2 text")
+            >>> tabs =(
+            ... ("Tab1",x),
+            ... ("Tab2",y),
+            )
+            >>> tabdata = yad.Paned(12345,orient='horizontal',tabs=tabs)
+            >>> print(tabdata)
+        """
+        args = ["--paned"]
+        if not key:
+            key = random.randInt(10000,20000)
+        args.append("--key=%d" % key)
+
+        if orient in ["horizontal","vertical"]:
+            args.append("--orient='%s'" % orient)
+
+        if splitter:
+            try: args.append("--splitter=%d" % splitter)
+            except TypeError: pass
+
+        arr = []
+        tf = []
+        for i,tab in enumerate(tabs):
+            f = tempfile.NamedTemporaryFile()
+            tf.append(f)
+            args.append("--tab='%s'" % tab[0])
+            x = [self.yad]
+            x.append("--plug=%d" % key)
+            x.append("--tabnum=%d" % (i+1))
+            x += tab[2]
+            x.append("&>")
+            x.append(f.name)
+            x.append("&")
+            arr.append(" ".join(x))
+
+        for generic_args in self.kwargs_helper(kwargs):
+            try: args.append("--%s" % generic_args)
+            except TypeError: args.append("--%s='%s'" % generic_args)
+
+        if sys.version_info[0] < 3:
+            child = pexpect.spawn(self.shell,timeout=None)
+        else:
+            child = pexpect.spawnu(self.shell,timeout=None)
+        child.setecho(False)
+        child.sendline("ipcrm -m %s" % key)
+        for i in arr:
+            child.sendline(i)
+        child.setecho(True)
+        retval,rc = self.execute(args=args)
+        #child.close()
+        if rc == 0:
+            dic = {}
+            for i,tab in enumerate(tabs):
+                dic[i+1] = tf[i].read()
+                tf[i].close()
+            return dic
+
+    def Picture(self,filename,size="orig",inc=None,**kwargs):
+        """Shows up a Picture Dialog. Takes a image file and displays it.
+        Please check example.
+
+        Args:
+            filename (str) : file to read from.
+            size (str, optional)  :   Set initial size of picture. Available values are fit for fitting image in window or orig for show picture in original size.
+            inc (int)  : Set increment value for scaling image.
+
+        Returns:
+            bool : Returns the status of the dialog.
+
+        Raises:
+            TypeError
+
+        Examples:
+            >>> x = yad.Picture("test.png",size="orig")
+            >>> print(x)
+        """
+        args = ["--paned"]
+
+        try:
+            os.stat(filename)
+            args.append("--filename='%s'" % filename)
+        except FileNotFoundException:
+            print("Warning: Invalid file for 'filename'")
+
+        if size in ["orig","fit"]:
+            args.append("--size='%s'" % size)
+
+        if inc:
+            try: args.append("--inc=%d" % inc)
+            except TypeError: pass
+
+        for generic_args in self.kwargs_helper(kwargs):
+            try: args.append("--%s" % generic_args)
+            except TypeError: args.append("--%s='%s'" % generic_args)
+
         retval,rc = self.execute(args=args)
         if rc == 0:
             return retval
@@ -1487,15 +1609,7 @@ class YAD:
     # kwargs helper
     def kwargs_helper(self,kwargs):
         """This function preprocesses the kwargs dictionary to sanitize it."""
-        args = []
-
-        # These are boolean parameters that are passed in kwargs.
-        generic_bool = ["center","print-xid","image-on-top",
-        "no-buttons","no-markup","always-print-result",
-        "dialog-sep","sticky","fixed",
-        "mouse","on-top","undecorated",
-        "skip-taskbar","maximized","fullscreen",
-        "selectable-labels",'listen','no-escape']
+        args = []IndexError, ValueError']
 
         # This is a dictionary of optional parameters that would create
         # syntax errors in python if they were passed in as kwargs.
