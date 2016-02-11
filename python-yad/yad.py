@@ -32,7 +32,7 @@ import pexpect
 import tempfile
 __all__ = ['Calendar','Color','DND','Entry','Icon','File','Font','List','Progress','MultiProgress','Scale','Print','Notify','Form','TextInfo','Notebook', 'Html']
 
-__version__ = "0.9.7"
+__version__ = "0.9.8"
 
 __doc__ = """python-yad is interface to yad for python. Inspired by the PyZenity Project.
 
@@ -1089,8 +1089,7 @@ class YAD:
             >>> x = yad.Progress()
             >>> for i in range(0,100):
             ...	  x(i,msg=str(i)+" done")
-            ...
-            ...	  time.sleep(0.2)
+            ...	  time.sleep(0.1)
         """
         if ('plug' or 'tabnum') in kwargs:
             raise IndexError("'plug' or 'tabnum' cannot be used with file dialog")
@@ -1135,8 +1134,9 @@ class YAD:
                 status : returncode of the proc
             """
             if type(percent) == float:
-                percent = int(percent * 100)
-            p.stdin.write('%d\n' % percent)
+                p.stdin.write('%f\n' % percent)
+            else:
+                p.stdin.write('%d\n' % percent)
             if msg:
                 p.stdin.write('# %s\n' % msg)
             return p.returncode
@@ -1147,9 +1147,6 @@ class YAD:
 
     def MultiProgress(self,bar=[],vertical=False,align="left",autoclose=False,autokill=False,**kwargs):
         """Display multi progress bars dialog.
-
-        Note:
-            This function sends the SIGPIPE signal if the user hits the cancel button. You must connect to this signal if you do not want to get an error.
 
         Args:
             bar (list|tuple, optional) : Adds progress bar. A multi-dimensional array. Format = ((LABEL,TYPE),(LABEL,TYPE),...). LABEL is a text label for progress bar.
@@ -1215,8 +1212,9 @@ class YAD:
                 status : returncode of the proc
             """
             if type(percent) == float:
-                percent = int(percent * 100)
-            p.stdin.write("%d:%d\n" % (bar,percent))
+                p.stdin.write("%d:%f\n" % (bar,percent))
+            else:
+                p.stdin.write("%d:%d\n" % (bar,percent))
             if msg:
                 p.stdin.write('%d:# %s\n' % (bar,msg))
             return p.returncode

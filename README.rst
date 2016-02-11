@@ -19,7 +19,7 @@ Example:
 >>> yad = YAD()
 >>> yad.Calendar()
 
-You can even check out the test application 'gdie'(Gnome-desktop-item-editor).
+You can even check out the test application 'gdie'(Gnome-desktop-item-editor) in the terminal.
 
 >>> gdie
 
@@ -48,4 +48,4 @@ If you guys encounter any bugs, or issues. please contact me via email:
 
 :Authors: Sagar D V <dvenkatsagar@gmail.com>
 
-:Version: 0.9.7
+:Version: 0.9.8
