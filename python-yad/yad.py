@@ -1056,9 +1056,6 @@ class YAD:
     log_height=30,**kwargs):
         """Show a progress dialog to the user.
 
-        Note:
-            This function sends the SIGPIPE signal if the user hits the cancel button. You must connect to this signal if you do not want to get an error.
-
         Args:
             text (str, optional) : Set text in progress bar.
             percent (int, optional) : Set initial percentage.
