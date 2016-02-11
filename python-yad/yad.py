@@ -1609,6 +1609,16 @@ class YAD:
     # kwargs helper
     def kwargs_helper(self,kwargs):
         """This function preprocesses the kwargs dictionary to sanitize it."""
+        args = []
+
+        # These are boolean parameters that are passed in kwargs.
+        generic_bool = ["center","print-xid","image-on-top",
+        "no-buttons","no-markup","always-print-result",
+        "dialog-sep","sticky","fixed",
+        "mouse","on-top","undecorated",
+        "skip-taskbar","maximized","fullscreen",
+        "selectable-labels",'listen','no-escape']
+
         # This is a dictionary of optional parameters that would create
         # syntax errors in python if they were passed in as kwargs.
         generic = {'window_icon': 'window-icon','timeout_indicator' : 'timeout-indicator',
