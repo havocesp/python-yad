@@ -1,6 +1,21 @@
 [Current]
 ^^^^^^^^^
 
+-  `cb738c8 <../../commit/cb738c8>`__ - **(Sagar V Dwibhashyam)** Added
+   new features. #vpat++
+-  `9b1984c <../../commit/9b1984c>`__ - **(Sagar DV)** Fixed information
+   in readme.rst
+-  `a110b8e <../../commit/a110b8e>`__ - **(Sagar DV)** Reorganized
+   files.
+-  `31ea3ef <../../commit/31ea3ef>`__ - **(Sagar DV)** Reorganized files
+
+0.9.5
+^^^^^
+
+-  `d30a994 <../../commit/d30a994>`__ - **(Sagar DV)** version update:
+   0.9.5
+-  `ecd43e6 <../../commit/ecd43e6>`__ - **(Sagar DV)** Version 0.9.5 is
+   ready. #vpat++
 -  `7a62d9c <../../commit/7a62d9c>`__ - **(Sagar DV)** Added the Html
    dialog. The functionality for the html dialog has been added but
    wasnt able to test it as the original yad program was giving
