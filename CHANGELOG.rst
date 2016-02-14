@@ -1,6 +1,28 @@
 [Current]
 ^^^^^^^^^
 
+-  `40e454c <../../commit/40e454c>`__ - **(Sagar Dwibhashyam)** Updated
+   version with few bug fixes
+
+0.9.8
+^^^^^
+
+-  `a97a171 <../../commit/a97a171>`__ - **(Sagar V Dwibhashyam)**
+   Updated Documentation
+-  `0d961d0 <../../commit/0d961d0>`__ - **(Sagar V Dwibhashyam)** Fixed
+   bugs related to progress bars
+-  `60344b0 <../../commit/60344b0>`__ - **(Sagar V Dwibhashyam)** Fixed
+   a small bug in kwargs\_helper
+-  `39c0109 <../../commit/39c0109>`__ - **(Sagar V Dwibhashyam)**
+   Updated the version in yad file
+-  `6407159 <../../commit/6407159>`__ - **(Sagar V Dwibhashyam)** Solved
+   some issues with the new features
+-  `a14aa0e <../../commit/a14aa0e>`__ - **(Sagar V Dwibhashyam)**
+   Updated info in Readme
+-  `a790850 <../../commit/a790850>`__ - **(Sagar V Dwibhashyam)**
+   Updated version
+-  `4e92058 <../../commit/4e92058>`__ - **(Sagar V Dwibhashyam)**
+   Updated Changelog. #vpat++
 -  `cb738c8 <../../commit/cb738c8>`__ - **(Sagar V Dwibhashyam)** Added
    new features. #vpat++
 -  `9b1984c <../../commit/9b1984c>`__ - **(Sagar DV)** Fixed information
