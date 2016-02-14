@@ -47,5 +47,3 @@ Contact Us
 If you guys encounter any bugs, or issues. please contact me via email:
 
 :Authors: Sagar D V <dvenkatsagar@gmail.com>
-
-:Version: 0.9.8

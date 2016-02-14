@@ -30,9 +30,9 @@ import imghdr
 import random
 import pexpect
 import tempfile
-__all__ = ['Calendar','Color','DND','Entry','Icon','File','Font','List','Progress','MultiProgress','Scale','Print','Notify','Form','TextInfo','Notebook', 'Html']
+__all__ = ['Calendar','Color','DND','Entry','Icon','File','Font','List','Progress','MultiProgress','Scale','Print','Notify','Form','TextInfo','Notebook', 'Html','Paned','Picture']
 
-__version__ = "0.9.8"
+__version__ = "0.9.9"
 
 __doc__ = """python-yad is interface to yad for python. Inspired by the PyZenity Project.
 
@@ -102,7 +102,7 @@ class YAD:
         self.shell = str(shell)
 
     # Calendar Dialog
-    def Calendar(self,day=None,month=None,year=None,date_format='%x', details=None,plug=False,**kwargs):
+    def Calendar(self,day=None,month=None,year=None, details=None,plug=False,**kwargs):
         """Prompt the user for a date.
         This will raise a Yad Calendar Dialog for the user to pick a date.
 
@@ -111,7 +111,6 @@ class YAD:
             day (int, optional) : Day of pre-selected date.
             month (int, optional) :Month of pre-selected date.
             year (int, optional) : Year of pre-selected date.
-            date_format (str, optional) : Set the format for the date fields (same as in calendar dialog).
             details (str, optional) : File with days details. Format = <date> <description>
                             date field is date in format, specified as '%m/%d/%Y'.
                             Description is a string with date details, which may include Pango markup.
@@ -142,8 +141,6 @@ class YAD:
             try: args.append("--year=%d" % year)
             except TypeError: pass
 
-        if date_format: args.append("--date-format=%s" %date_format)
-
         if details:
             try:
                 os.stat(details)
@@ -158,7 +155,8 @@ class YAD:
         if plug: return args
         retval,rc = self.execute(args=args)
         if rc == 0:
-            month, day, year = [int(x) for x in re.split('[-,/]',retval)]
+            retval = retval.split('\n')[-1]
+            month, day, year = [int(x) for x in re.split('[-,/,.]',retval)]
             return date(year, month, day)
 
     # Color Dialog
@@ -1142,7 +1140,9 @@ class YAD:
         return update
 
 
-    def MultiProgress(self,bar=[],vertical=False,align="left",autoclose=False,autokill=False,**kwargs):
+    def MultiProgress(self,bar=[],vertical=False,align="left",autoclose=False,
+    autokill=False,log=None,log_on_top=False,log_expanded=False,
+    log_height=30,**kwargs):
         """Display multi progress bars dialog.
 
         Args:
@@ -1150,6 +1150,12 @@ class YAD:
                                 TYPE is a progress bar type. Types are: NORM for normal progress bar, RTL for inverted progress bar and PULSE for pulsate progress bar.
             vertical (bool, optional) : Set vertical orientation of progress bars.
             align (str, optional) : Set alignment of bar labels. Possible types are left, center or right. Default is left.
+            autoclose (bool, optional) : Close dialog when 100% has been reached.
+            autokill (bool, optional) : Kill parent process if cancel button is pressed.
+            log (str, optional) : Show log window. This window gathers all of lines from stdin, started from # instead of setting appropriate progress labels.
+            log_on_top (bool, optional) : Place log window above progress bar.
+            log_expanded (bool, optional) : Start with expanded log window.
+            log_height (int, optional) : Set the height of log window.
             **kwargs : Optional command line parameters for Yad such as height,width,title etc.
 
         Returns:
@@ -1191,6 +1197,16 @@ class YAD:
             args.append("--align=%s" % align)
         else:
             print("Warning: 'align' must either be left,right,or center.")
+
+        if autoclose: args.append("--auto-close")
+
+        if autokill: args.append("--auto-kill")
+
+        if log: args.append("--enable-log='%s'" % log)
+
+        if log_on_top: args.append("--log-on-top")
+
+        if log_expanded: args.append("--log-expanded")
 
         for generic_args in self.kwargs_helper(kwargs):
             try: args.append("--%s" % generic_args)
