@@ -32,7 +32,7 @@ import pexpect
 import tempfile
 __all__ = ['Calendar','Color','DND','Entry','Icon','File','Font','List','Progress','MultiProgress','Scale','Print','Notify','Form','TextInfo','Notebook', 'Html','Paned','Picture']
 
-__version__ = "0.9.9"
+__version__ = "0.9.10"
 
 __doc__ = """python-yad is interface to yad for python. Inspired by the PyZenity Project.
 
@@ -1134,6 +1134,7 @@ class YAD:
                 p.stdin.write('%d\n' % percent)
             if msg:
                 p.stdin.write('# %s\n' % msg)
+            p.stdin.flush()
             return p.returncode
 
         p = Popen([self.yad] + args,stdin=PIPE,stdout=PIPE,universal_newlines=True)
@@ -1230,6 +1231,7 @@ class YAD:
                 p.stdin.write("%d:%d\n" % (bar,percent))
             if msg:
                 p.stdin.write('%d:# %s\n' % (bar,msg))
+            p.stdin.flush()
             return p.returncode
 
         p = Popen([self.yad] + args,stdin=PIPE,stdout=PIPE,universal_newlines=True)

@@ -66,19 +66,17 @@ def scale(yad):
     print(x)
 
 def prog1(yad):
-    x = yad.Progress()
-    for i in range(0,100):
+    x = yad.Progress(autoclose=True,autokill=True)
+    for i in range(0,110,10):
         y = x(i,msg=str(i)+"% done")
         time.sleep(0.2)
 
 def prog2(yad):
-    x = yad.MultiProgress(bar=(("bar1","NORM"),("bar2","PULSE")),autokill=True,autoclose=True)
-    for i in range(0,100):
+    x = yad.MultiProgress(bar=(("bar1","NORM"),("bar2","NORM")),autokill=True,autoclose=True)
+    for i in range(0,110,10):
         x(i,1,msg=str(i)+"% done")
         x(i,2,msg=str(i)+"% done")
-        time.sleep(0.1)
-    x(100,1,msg="100% done")
-    x(100,2,msg="100% done")
+        time.sleep(0.2)
 
 def form(yad):
     x = (
@@ -145,5 +143,5 @@ dic = {
 }
 
 for param,value in dic.items():
-    if param == "gen":
+    if param == "prog2":
         value(yad)

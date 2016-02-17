@@ -1,6 +1,8 @@
 [Current]
 ^^^^^^^^^
 
+-  `2c1fb03 <../../commit/2c1fb03>`__ - **(Sagar Dwibhashyam)** Updated
+   changelog
 -  `40e454c <../../commit/40e454c>`__ - **(Sagar Dwibhashyam)** Updated
    version with few bug fixes
 

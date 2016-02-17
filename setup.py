@@ -2,12 +2,12 @@
 from setuptools import setup, find_packages
 import os
 here = os.path.abspath(os.path.dirname(__file__))
-print();
-with open(os.path.join("/".join(here.split("/")[:-1]),"README.rst"),"r") as f:
+#os.path.join("/".join(here.split("/")[:-1]),""),
+with open("README.rst","r") as f:
 	long_description = f.read()
 
 setup(name='yad',
-	version='0.9.9',
+	version='0.9.10',
 	description='A python interface for the Yad program',
 	author='Sagar D V',
 	author_email='dvenkatsagar@gmail.com',
@@ -31,4 +31,5 @@ setup(name='yad',
 	],
 	install_requires=['pexpect>=3.3'],
 	scripts=["gdie"],
-	py_modules=["yad"])
+	py_modules=["yad"]
+	)
