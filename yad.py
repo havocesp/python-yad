@@ -30,9 +30,8 @@ import imghdr
 import random
 import pexpect
 import tempfile
-__all__ = ['Calendar','Color','DND','Entry','Icon','File','Font','List','Progress','MultiProgress','Scale','Print','Notify','Form','TextInfo','Notebook', 'Html','Paned','Picture']
 
-__version__ = "0.9.10"
+__version__ = "0.9.11"
 
 __doc__ = """python-yad is interface to yad for python. Inspired by the PyZenity Project.
 
@@ -49,10 +48,13 @@ Example:
 
 Each function takes optional kwargs parameters which allows the use of general yad parameters.
 """
-signal(SIGPIPE,SIG_DFL)
+signal(SIGPIPE, SIG_DFL)
+
+
 class YAD:
     """The main class used as the interface to Yad."""
-    def __init__(self,exefile='/usr/bin/yad',shell='/bin/bash'):
+
+    def __init__(self, exefile='/usr/bin/yad', shell='/bin/bash'):
         """
         Attributes:
             yad (str) :	string representing the yad program.
@@ -72,18 +74,18 @@ class YAD:
                 fixed (bool, optional) : Make window fixed width and height.
                 mouse (bool, optional) : Place window under mouse position.
                 on_top (bool, optional) : Place window over other windows.
-            	undecorated (bool, optional) : Make window undecorated (remove title and window borders).
-            	skip_taskbar (bool, optional) : Don't show window in taskbar and pager.
-            	maximized (bool, optional) : Run dialog window maximized.
-            	fullscreen (bool, optional) : Run dialog in fullscreen mode. This option may not work on all window managers.
-            	selectable_labels (bool, optional) :  If set, user can select dialog's text and copy it to clipboard. This option also affects on label fields in form dialog.
-            	window_icon (str, optional) : Set the window icon.
+                undecorated (bool, optional) : Make window undecorated (remove title and window borders).
+                skip_taskbar (bool, optional) : Don't show window in taskbar and pager.
+                maximized (bool, optional) : Run dialog window maximized.
+                fullscreen (bool, optional) : Run dialog in fullscreen mode. This option may not work on all window managers.
+                selectable_labels (bool, optional) :  If set, user can select dialog's text and copy it to clipboard. This option also affects on label fields in form dialog.
+                window_icon (str, optional) : Set the window icon.
                 timeout (int, optional) : Set the dialog timeout in seconds.
-            	timeout_indicator (bool, optional) : Set the dialog timeout in seconds.
-            	kill_parent (signal, optional) : Send SIGNAL to parent process. Default value of SIGNAL is a SIGTERM. SIGNAL may be specified by it's number or symbolic name with or without SIG prefix. See signal(7) for details about signals.
-            	text_align (str, optional) : Set type of dialog text justification. TYPE may be left, right, center or fill.
-            	buttons_layout (str, optional) : Set buttons layout type. Possible types are: spread, edge, start, end or center.  Default is end.
-            	image (str, optional) : Set the dialog image which appears on the left side of dialog. IMAGE might be file name or icon name from current icon theme.
+                timeout_indicator (bool, optional) : Set the dialog timeout in seconds.
+                kill_parent (signal, optional) : Send SIGNAL to parent process. Default value of SIGNAL is a SIGTERM. SIGNAL may be specified by it's number or symbolic name with or without SIG prefix. See signal(7) for details about signals.
+                text_align (str, optional) : Set type of dialog text justification. TYPE may be left, right, center or fill.
+                buttons_layout (str, optional) : Set buttons layout type. Possible types are: spread, edge, start, end or center.  Default is end.
+                image (str, optional) : Set the dialog image which appears on the left side of dialog. IMAGE might be file name or icon name from current icon theme.
                 text(str, optional) : Set the dialog text.
                 title (str, optional) : Set the dialog title.
                 width (int, optional) : Set the dialog width.
@@ -102,7 +104,8 @@ class YAD:
         self.shell = str(shell)
 
     # Calendar Dialog
-    def Calendar(self,day=None,month=None,year=None, details=None,plug=False,**kwargs):
+    def Calendar(self, day=None, month=None, year=None,
+                 details=None, plug=False, **kwargs):
         """Prompt the user for a date.
         This will raise a Yad Calendar Dialog for the user to pick a date.
 
@@ -130,16 +133,22 @@ class YAD:
         args = ["--calendar"]
 
         if day:
-            try:args.append("--day=%d" % day)
-            except TypeError: pass
+            try:
+                args.append("--day=%d" % day)
+            except TypeError:
+                pass
 
         if month:
-            try:args.append("--month=%d" % month)
-            except TypeError: pass
+            try:
+                args.append("--month=%d" % month)
+            except TypeError:
+                pass
 
         if year:
-            try: args.append("--year=%d" % year)
-            except TypeError: pass
+            try:
+                args.append("--year=%d" % year)
+            except TypeError:
+                pass
 
         if details:
             try:
@@ -149,18 +158,22 @@ class YAD:
                 raise FileNotFoundError("Invalid file for details.")
 
         for generic_args in self.kwargs_helper(kwargs):
-            try: args.append("--%s" % generic_args)
-            except TypeError: args.append("--%s='%s'" % generic_args)
+            try:
+                args.append("--%s" % generic_args)
+            except TypeError:
+                args.append("--%s='%s'" % generic_args)
 
-        if plug: return args
-        retval,rc = self.execute(args=args)
+        if plug:
+            return args
+        retval, rc = self.execute(args=args)
         if rc == 0:
             retval = retval.split('\n')[-1]
-            month, day, year = [int(x) for x in re.split('[-,/,.]',retval)]
+            month, day, year = [int(x) for x in re.split('[-,/,.]', retval)]
             return date(year, month, day)
 
     # Color Dialog
-    def Color(self,color='#ffffff',extra=False,palette='/etc/X11/rgb.txt',alpha=False,mode="hex",plug=False,**kwargs):
+    def Color(self, color='#ffffff', extra=False, palette='/etc/X11/rgb.txt',
+              alpha=False, mode="hex", plug=False, **kwargs):
         """Prompt the user to choose a color.
         This will raise a Yad Color Dialog for the user to pick a color.
 
@@ -189,7 +202,8 @@ class YAD:
         else:
             print("Warning: Invalid Color for 'init_color'")
 
-        if extra: args.append("--extra")
+        if extra:
+            args.append("--extra")
 
         if palette:
             try:
@@ -198,24 +212,29 @@ class YAD:
             except FileNotFoundError:
                 raise FileNotFoundError("Invalid file for palette.")
 
-        if alpha: args.append("--alpha")
+        if alpha:
+            args.append("--alpha")
 
         if mode:
-            if mode in ["hex","rgb"]:
+            if mode in ["hex", "rgb"]:
                 args.append("--mode='%s'" % mode)
-            else: args.append("--mode='hex'")
+            else:
+                args.append("--mode='hex'")
 
         for generic_args in self.kwargs_helper(kwargs):
-            try: args.append("--%s" % generic_args)
-            except TypeError: args.append("--%s='%s'" % generic_args)
+            try:
+                args.append("--%s" % generic_args)
+            except TypeError:
+                args.append("--%s='%s'" % generic_args)
 
-        if plug: return args
-        retval,rc = self.execute(args=args)
+        if plug:
+            return args
+        retval, rc = self.execute(args=args)
         if rc == 0:
             return retval
 
     # Drag and Drop Dialog
-    def DND(self,cmd=None,tooltip=False,plug=False,**kwargs):
+    def DND(self, cmd=None, tooltip=False, plug=False, **kwargs):
         """Prompt the user to drag and drop something.
         This will raise a Yad DND Dialog for the user.
 
@@ -234,24 +253,28 @@ class YAD:
             >>> x = yad.DND(tooltip=True,text="Drag and Drop here")
         """
         args = ["--dnd"]
-        if cmd: args.append("--command='%s'" % cmd)
+        if cmd:
+            args.append("--command='%s'" % cmd)
 
-        if tooltip: args.append("--tooltip")
+        if tooltip:
+            args.append("--tooltip")
 
         for generic_args in self.kwargs_helper(kwargs):
-            try: args.append("--%s" % generic_args)
-            except TypeError: args.append("--%s='%s'" % generic_args)
+            try:
+                args.append("--%s" % generic_args)
+            except TypeError:
+                args.append("--%s='%s'" % generic_args)
 
-        if plug: return args
-        retval,rc = self.execute(args=args)
+        if plug:
+            return args
+        retval, rc = self.execute(args=args)
         if rc == 0:
             return retval
 
-
     # Text Entry Dialog
-    def Entry(self,label=None,text=None,hide_text=False,use_completion=False,
-    editable=False,numeric=None,licon=None,licon_action=None,ricon=None,
-    ricon_action=None,data=[],plug=False,**kwargs):
+    def Entry(self, label=None, text=None, hide_text=False, use_completion=False,
+              editable=False, numeric=None, licon=None, licon_action=None, ricon=None,
+              ricon_action=None, data=[], plug=False, **kwargs):
         """Prompt the user to enter a value.
         This will raise a Yad Combo Box Entry Dialog for the user.
 
@@ -283,19 +306,28 @@ class YAD:
             >>> z = yad.Entry(label="pick an item or type one",data=["","apple","orange","banana"])
         """
         args = ["--entry"]
-        if label: args.append("--entry-label='%s'" % label)
+        if label:
+            args.append("--entry-label='%s'" % label)
 
-        if text: args.append("--entry-text='%s'" % text)
+        if text:
+            args.append("--entry-text='%s'" % text)
 
-        if hide_text: args.append("--hide-text")
+        if hide_text:
+            args.append("--hide-text")
 
-        if use_completion: args.append("--completion")
+        if use_completion:
+            args.append("--completion")
 
-        if editable: args.append("--editable")
+        if editable:
+            args.append("--editable")
 
         if numeric:
-            try: args.append("--numeric=[%d,%d,%d,%d]" % (numeric[0],numeric[1],numeric[2],numeric[3]))
-            except TypeError: args.append("--numeric=[%d,%d,%d,%d]" % (0,65525,1,2))
+            try:
+                args.append(
+                    "--numeric=[%d,%d,%d,%d]" %
+                    (numeric[0], numeric[1], numeric[2], numeric[3]))
+            except TypeError:
+                args.append("--numeric=[%d,%d,%d,%d]" % (0, 65525, 1, 2))
 
         if licon:
             try:
@@ -304,7 +336,8 @@ class YAD:
             except FileNotFoundError:
                 raise FileNotFoundError("Invalid file for 'licon'")
 
-        if licon_action: args.append("--licon-action='%s'" % licon_action)
+        if licon_action:
+            args.append("--licon-action='%s'" % licon_action)
 
         if ricon:
             try:
@@ -313,26 +346,32 @@ class YAD:
             except FileNotFoundError:
                 raise FileNotFoundError("Invalid file for 'ricon'")
 
-        if ricon_action: args.append("--ricon-action='%s'" % ricon_action)
+        if ricon_action:
+            args.append("--ricon-action='%s'" % ricon_action)
 
         for generic_args in self.kwargs_helper(kwargs):
-            try: args.append("--%s" % generic_args)
-            except TypeError: args.append("--%s='%s'" % generic_args)
+            try:
+                args.append("--%s" % generic_args)
+            except TypeError:
+                args.append("--%s='%s'" % generic_args)
 
         if data:
             try:
-                for dat in data: args.append(str(dat))
+                for dat in data:
+                    args.append(str(dat))
             except IndexError:
-                raise IndexError("Invalid data. 'data' must be 1D array representing the items of the Entry list.")
+                raise IndexError(
+                    "Invalid data. 'data' must be 1D array representing the items of the Entry list.")
 
-        if plug: return args
-        retval,rc = self.execute(args=args)
+        if plug:
+            return args
+        retval, rc = self.execute(args=args)
         if rc == 0:
             return retval
 
     # Icon Box Dialog
-    def Icons(self,dir=None,use_generic=False,sort=False,descend=False,listen=False,
-    item_width=256,compact=False,single_click=False,term=None,plug=False,**kwargs):
+    def Icons(self, dir=None, use_generic=False, sort=False, descend=False, listen=False,
+              item_width=256, compact=False, single_click=False, term=None, plug=False, **kwargs):
         """Shows a Icon Box which can also execute various command for each icon.
 
         Args:
@@ -383,34 +422,50 @@ class YAD:
             except FileNotFoundError:
                 raise FileNotFoundError("Invalid Directory for 'dir'.")
 
-        if use_generic: args.append("--generic")
+        if use_generic:
+            args.append("--generic")
 
-        if sort: args.append("--sort-by-name")
+        if sort:
+            args.append("--sort-by-name")
 
-        if descend: args.append("--descend")
+        if descend:
+            args.append("--descend")
 
-        if listen: args.append("--listen")
+        if listen:
+            args.append("--listen")
 
-        try: args.append("--item-width=%d" % item_width)
-        except TypeError: args.append("--item-width=256")
+        try:
+            args.append("--item-width=%d" % item_width)
+        except TypeError:
+            args.append("--item-width=256")
 
-        if compact: args.append("--compact")
+        if compact:
+            args.append("--compact")
 
-        if single_click: args.append("--single-click")
+        if single_click:
+            args.append("--single-click")
 
-        if term: args.append("--term='%s'" % term)
+        if term:
+            args.append("--term='%s'" % term)
 
         for generic_args in self.kwargs_helper(kwargs):
-            try: args.append("--%s" % generic_args)
-            except TypeError: args.append("--%s='%s'" % generic_args)
+            try:
+                args.append("--%s" % generic_args)
+            except TypeError:
+                args.append("--%s='%s'" % generic_args)
 
-        def update(name=None,tooltip=None,icon=None,cmd=None,term=False,ret=False):
+        def update(name=None, tooltip=None, icon=None,
+                   cmd=None, term=False, ret=False):
             child.setecho(False)
-            if name: child.sendline(name)
-            else: child.sendline()
+            if name:
+                child.sendline(name)
+            else:
+                child.sendline()
 
-            if tooltip: child.sendline(tooltip)
-            else: child.sendline()
+            if tooltip:
+                child.sendline(tooltip)
+            else:
+                child.sendline()
 
             if icon:
                 try:
@@ -419,35 +474,40 @@ class YAD:
                 except FileNotFoundError:
                     child.sendline()
 
-            if cmd: child.sendline(cmd)
-            else: child.sendline()
+            if cmd:
+                child.sendline(cmd)
+            else:
+                child.sendline()
 
-            if term: child.sendline("TRUE")
-            else: child.sendline("FALSE")
+            if term:
+                child.sendline("TRUE")
+            else:
+                child.sendline("FALSE")
             child.setecho(True)
             if ret:
-                retval = child.read()
                 child.close()
                 rc = child.exitstatus
                 return rc
 
         if listen:
-            if plug: raise Exception("Error: 'plug' and 'listen' cannot be used together")
+            if plug:
+                raise Exception(
+                    "Error: 'plug' and 'listen' cannot be used together")
             cmd = " ".join([self.yad] + args)
             if sys.version_info[0] < 3:
-                child = pexpect.spawn(cmd,timeout=None)
+                child = pexpect.spawn(cmd, timeout=None)
             else:
-                child = pexpect.spawnu(cmd,timeout=None)
+                child = pexpect.spawnu(cmd, timeout=None)
             return update
         else:
-            if plug: return args
-            retval,rc = self.execute(args=args)
+            if plug:
+                return args
+            retval, rc = self.execute(args=args)
             return rc
 
-
     # File Selection Dialog
-    def File(self,filename=None,multi=False,dir=False,save=False,sep='|',
-    preview=False,quoted=False,confirm_overwrite=None,filters=None,**kwargs):
+    def File(self, filename=None, multi=False, dir=False, save=False, sep='|',
+             preview=False, quoted=False, confirm_overwrite=None, filters=None, **kwargs):
         """Shows a File Selection Dialog from which the user can choose a file.
 
         Args:
@@ -474,44 +534,56 @@ class YAD:
             >>> x = yad.File(quoted=True,file_filters=(('py files','*.py'),('txt files','*.txt')))
         """
         if ('plug' or 'tabnum') in kwargs:
-            raise IndexError("'plug' or 'tabnum' cannot be used with file dialog")
+            raise IndexError(
+                "'plug' or 'tabnum' cannot be used with file dialog")
 
         args = ["--file"]
-        if filename: args.append("--filename='%s'" % filename)
+        if filename:
+            args.append("--filename='%s'" % filename)
 
-        if multi: args.append("--multiple")
+        if multi:
+            args.append("--multiple")
 
-        if dir: args.append("--directory")
+        if dir:
+            args.append("--directory")
 
-        if save: args.append("--save")
+        if save:
+            args.append("--save")
 
         args.append("--separator='%s'" % sep)
 
-        if preview: args.append("--add-preview")
+        if preview:
+            args.append("--add-preview")
 
-        if quoted: args.append("--quoted-output")
+        if quoted:
+            args.append("--quoted-output")
 
-        if confirm_overwrite: args.append("--confirm-overwrite='%s'" % confirm_overwrite)
+        if confirm_overwrite:
+            args.append("--confirm-overwrite='%s'" % confirm_overwrite)
 
         if filters:
             for filt in filters:
                 try:
-                    args.append("--file-filter='%s'|'%s'" % (filt[0],filt[1]))
+                    args.append("--file-filter='%s'|'%s'" % (filt[0], filt[1]))
                 except TypeError:
-                    print("Warning : Invalid 'filters'. It must be a multi-dimensional array in format ((NAME,PATTERN),(NAME,PATTERN),...)")
+                    print(
+                        "Warning : Invalid 'filters'. It must be a multi-dimensional array in format ((NAME,PATTERN),(NAME,PATTERN),...)")
 
         for generic_args in self.kwargs_helper(kwargs):
-            try: args.append("--%s" % generic_args)
-            except TypeError: args.append("--%s='%s'" % generic_args)
+            try:
+                args.append("--%s" % generic_args)
+            except TypeError:
+                args.append("--%s='%s'" % generic_args)
 
-        retval,rc = self.execute(args=args)
+        retval, rc = self.execute(args=args)
         if rc == 0:
             regex = re.compile(r'[\n,\r,\t,\']')
-            retval = regex.sub("",retval)
+            retval = regex.sub("", retval)
             return retval.split(sep)
 
     # Font Selection Dialog
-    def Font(self,font=["Sans","Regular","12"],preview=None,plug=False,**kwargs):
+    def Font(self, font=["Sans", "Regular", "12"],
+             preview=None, plug=False, **kwargs):
         """Prompts the user to select a font.
 
         Args:
@@ -530,27 +602,33 @@ class YAD:
             >>> print(x)
         """
         args = ["--font"]
-        try: args.append("--fontname='%s %s %s'" % (font[0],font[1],font[2]))
+        try:
+            args.append("--fontname='%s %s %s'" % (font[0], font[1], font[2]))
         except TypeError:
-            print("Warning: Invalid font for 'font'. It should be an list of tuple in the format ['Family-list','style-options',size]")
+            print(
+                "Warning: Invalid font for 'font'. It should be an list of tuple in the format ['Family-list','style-options',size]")
 
-        if preview: args.append("--preview='%s'" % preview)
+        if preview:
+            args.append("--preview='%s'" % preview)
 
         for generic_args in self.kwargs_helper(kwargs):
-            try: args.append("--%s" % generic_args)
-            except TypeError: args.append("--%s='%s'" % generic_args)
+            try:
+                args.append("--%s" % generic_args)
+            except TypeError:
+                args.append("--%s='%s'" % generic_args)
 
-        if plug: return args
-        retval,rc = self.execute(args=args)
+        if plug:
+            return args
+        retval, rc = self.execute(args=args)
         if rc == 0:
             return retval.split(' ')
 
     # List Dialog
-    def List(self,colnames=[], boolstyle=None, sep='|',multi=False,
-    editable=False, no_headers=False,no_click=False,print_all=False,
-    print_col=0,hide_col=None, expand_col=0, search_col=0,limit=None,
-    ellipsize=None, dclick_action=None,regex=None, listen=False,
-    quoted=False, data=[],plug=False,**kwargs):
+    def List(self, colnames=[], boolstyle=None, sep='|', multi=False,
+             editable=False, no_headers=False, no_click=False, print_all=False,
+             print_col=0, hide_col=None, expand_col=0, search_col=0, limit=None,
+             ellipsize=None, dclick_action=None, regex=None, listen=False,
+             quoted=False, data=[], plug=False, **kwargs):
         """Shows a List Dialog box which allows the user to select an item.
 
         Args:
@@ -597,77 +675,95 @@ class YAD:
         args = ["--list"]
         #for col in colnames: args.append("--column='%s'" % col)
         for cols in colnames:
-            if cols[1] in ["TEXT", "NUM", "FLT", "CHK", "RD", "IMG", "HD", "TIP"]:
-                args.append("--column=%s:%s" %(cols[0],cols[1]))
+            if cols[1] in ["TEXT", "NUM", "FLT",
+                           "CHK", "RD", "IMG", "HD", "TIP"]:
+                args.append("--column=%s:%s" % (cols[0], cols[1]))
             else:
-                print("Warning: The TYPE of 'column' must be either TEXT, NUM, FLT, CHK, RD, IMG, HD or TIP.")
+                print(
+                    "Warning: The TYPE of 'column' must be either TEXT, NUM, FLT, CHK, RD, IMG, HD or TIP.")
                 args.append("--column=%s:TEXT" % cols[0])
 
         if boolstyle:
-            if boolstyle in ['checklist','radiolist']:
+            if boolstyle in ['checklist', 'radiolist']:
                 args.append('--%s' % boolstyle)
             else:
-                raise ValueError("'bool_style' should be of either these values ['checklist','radiolist']")
+                raise ValueError(
+                    "'bool_style' should be of either these values ['checklist','radiolist']")
 
         args.append("--separator='%s'" % sep)
 
-        if multi: args.append('--multiple')
+        if multi:
+            args.append('--multiple')
 
-        if editable: args.append('--editable')
+        if editable:
+            args.append('--editable')
 
-        if no_headers: args.append('--no-headers')
+        if no_headers:
+            args.append('--no-headers')
 
-        if no_click: args.append('--no-click')
+        if no_click:
+            args.append('--no-click')
 
-        if print_all: args.append('--print-all')
+        if print_all:
+            args.append('--print-all')
 
         try:
             if print_col:
                 args.append('--print-column=%d' % print_col)
-        except TypeError:pass
+        except TypeError:
+            pass
         try:
             if hide_col:
                 args.append('--hide-column=%d' % hide_col)
-        except TypeError:pass
+        except TypeError:
+            pass
         try:
             if expand_col:
                 args.append('--expand-column=%d' % expand_col)
-        except TypeError:pass
+        except TypeError:
+            pass
         try:
             if limit:
                 args.append('--limit=%d' % limit)
-        except TypeError:pass
+        except TypeError:
+            pass
 
         if ellipsize:
-            if not ellipsize in ["START","MIDDLE","END"]:
+            if not ellipsize in ["START", "MIDDLE", "END"]:
                 args.append("--ellipsize='%s'" % ellipsize)
             else:
                 raise ValueError("'ellipsize' must be either START,MIDDLE,END")
 
-        if dclick_action: args.append("--dclick-action='%s'" % dclick_action)
+        if dclick_action:
+            args.append("--dclick-action='%s'" % dclick_action)
 
-        if regex: args.append("--regex-search='%s'" % regex)
+        if regex:
+            args.append("--regex-search='%s'" % regex)
 
-        if listen: args.append('--listen')
+        if listen:
+            args.append('--listen')
 
-        if quoted: args.append('--quoted-output')
+        if quoted:
+            args.append('--quoted-output')
 
         for generic_args in self.kwargs_helper(kwargs):
-            try: args.append("--%s" % generic_args)
-            except TypeError: args.append("--%s='%s'" % generic_args)
+            try:
+                args.append("--%s" % generic_args)
+            except TypeError:
+                args.append("--%s='%s'" % generic_args)
 
         if data:
             for dat in data:
-                for i in range(0,len(colnames)-len(dat)):
+                for i in range(0, len(colnames) - len(dat)):
                     dat.append('')
                 for d in dat:
                     args.append("'%s'" % d)
 
-        def update(data=[],ret=False):
+        def update(data=[], ret=False):
             child.setecho(False)
             if data:
                 for dat in data:
-                    for i in range(0,len(colnames)-len(dat)):
+                    for i in range(0, len(colnames) - len(dat)):
                         dat.append('')
                     for d in dat:
                         child.sendline("%s" % d)
@@ -675,7 +771,7 @@ class YAD:
             if ret:
                 retval = child.read()
                 regex = re.compile(r'[\n,\r,\t,\']')
-                retval = regex.sub("",retval)
+                retval = regex.sub("", retval)
                 retval = retval.rstrip(sep).split(sep)
                 child.close()
                 rc = child.exitstatus
@@ -683,25 +779,28 @@ class YAD:
                     return retval
 
         if listen:
-            if plug: raise Exception("Error: 'plug' and 'listen' cannot be used together")
+            if plug:
+                raise Exception(
+                    "Error: 'plug' and 'listen' cannot be used together")
             cmd = " ".join([self.yad] + args)
             if sys.version_info[0] < 3:
-                child = pexpect.spawn(cmd,timeout=None)
+                child = pexpect.spawn(cmd, timeout=None)
             else:
-                child = pexpect.spawnu(cmd,timeout=None)
+                child = pexpect.spawnu(cmd, timeout=None)
             return update
         else:
-            if plug: return args
-            retval,rc = self.execute(args=args)
+            if plug:
+                return args
+            retval, rc = self.execute(args=args)
             if rc == 0:
                 regex = re.compile(r'[\n,\r,\t,\']')
-                retval = regex.sub("",retval)
+                retval = regex.sub("", retval)
                 retval = retval.rstrip(sep).split(sep)
                 return retval
 
     # Notification Dialog
-    def Notify(self,cmd=None,listen=False,sep='|',item_sep='!',menu=[],
-    no_middle=False,hidden=False,icon=None,text=None,**kwargs):
+    def Notify(self, cmd=None, listen=False, sep='|', item_sep='!', menu=[],
+               no_middle=False, hidden=False, icon=None, text=None, **kwargs):
         """Sets a Notification icon in the message tray.
 
         Args:
@@ -737,27 +836,33 @@ class YAD:
             >>> yad.Notify(cmd="nautilus",menu=(("nautilus","nautilus",""),("evince","evince"),("quit","quit","")))
         """
         if ('plug' or 'tabnum') in kwargs:
-            raise IndexError("'plug' or 'tabnum' cannot be used with Notification dialog")
+            raise IndexError(
+                "'plug' or 'tabnum' cannot be used with Notification dialog")
 
         args = ["--notification"]
-        if cmd: args.append("--command='%s'" % cmd)
+        if cmd:
+            args.append("--command='%s'" % cmd)
 
-        if listen: args.append("--listen")
+        if listen:
+            args.append("--listen")
 
         args.append("--separator='%s'" % sep)
 
         args.append("--item-separator='%s'" % item_sep)
 
         if menu:
-            try :
+            try:
                 menu_string = sep.join([item_sep.join(m) for m in menu])
                 args.append("--menu='%s'" % menu_string)
             except IndexError:
-                raise IndexError("Invalid format of 'menu'. Format should be ((NAME,ACTION,ICON),(NAME,ACTION,ICON),...)")
+                raise IndexError(
+                    "Invalid format of 'menu'. Format should be ((NAME,ACTION,ICON),(NAME,ACTION,ICON),...)")
 
-        if no_middle: args.append("--no-middle")
+        if no_middle:
+            args.append("--no-middle")
 
-        if hidden: args.append("--hidden")
+        if hidden:
+            args.append("--hidden")
 
         if icon:
             try:
@@ -766,13 +871,17 @@ class YAD:
             except FileNotFoundError:
                 raise FileNotFoundError("Invalid file for 'icon'")
 
-        if text: args.append("--text='%s'" % text)
+        if text:
+            args.append("--text='%s'" % text)
 
         for generic_args in self.kwargs_helper(kwargs):
-            try: args.append("--%s" % generic_args)
-            except TypeError: args.append("--%s='%s'" % generic_args)
+            try:
+                args.append("--%s" % generic_args)
+            except TypeError:
+                args.append("--%s='%s'" % generic_args)
 
-        def update(icon=None,tooltip=None,visible="true",action=None,menu=[],q=False,ret=False):
+        def update(icon=None, tooltip=None, visible="true",
+                   action=None, menu=[], q=False, ret=False):
             child.setecho(False)
             if icon:
                 try:
@@ -781,20 +890,24 @@ class YAD:
                 except FileNotFoundError:
                     pass
 
-            if tooltip: child.sendline("tooltip:'%s'" % tooltip)
+            if tooltip:
+                child.sendline("tooltip:'%s'" % tooltip)
 
-            if visible in ["true","false","blink"]: child.sendline("visible:%s" % visible)
+            if visible in ["true", "false", "blink"]:
+                child.sendline("visible:%s" % visible)
 
-            if action: child.sendline("action:%s" % action)
+            if action:
+                child.sendline("action:%s" % action)
 
             if menu:
-                try :
+                try:
                     menu_string = sep.join([item_sep.join(m) for m in menu])
                     child.sendline("menu:%s" % menu_string)
                 except IndexError:
                     pass
 
-            if q: child.sendline("quit")
+            if q:
+                child.sendline("quit")
             child.setecho(True)
             if ret:
                 retval = child.read()
@@ -806,17 +919,18 @@ class YAD:
         if listen:
             cmd = " ".join([self.yad] + args)
             if sys.version_info[0] < 3:
-                child = pexpect.spawn(cmd,timeout=None)
+                child = pexpect.spawn(cmd, timeout=None)
             else:
-                child = pexpect.spawnu(cmd,timeout=None)
+                child = pexpect.spawnu(cmd, timeout=None)
             return update
         else:
-            retval,rc = self.execute(args=args)
+            retval, rc = self.execute(args=args)
             if rc == 0:
                 return retval
 
     # Print Dialog
-    def Print(self,filename,type=None,headers=False,preview=False,font=None,**kwargs):
+    def Print(self, filename, type=None, headers=False,
+              preview=False, font=None, **kwargs):
         """Shows a print dialog box.
 
         Args:
@@ -837,41 +951,50 @@ class YAD:
             >>> yad.Print("test.pdf")
         """
         if ('plug' or 'tabnum') in kwargs:
-            raise IndexError("'plug' or 'tabnum' cannot be used with file dialog")
+            raise IndexError(
+                "'plug' or 'tabnum' cannot be used with file dialog")
 
         args = ["--print"]
         try:
             os.stat(filename)
             args.append("--filename='%s'" % filename)
-        except FileNotFoundException:
+        except FileNotFoundError:
             print("Warning: Invalid file for 'filename'")
 
         if type:
-            if type in ["TEXT","IMAGE","RAW"]:
+            if type in ["TEXT", "IMAGE", "RAW"]:
                 args.append("--type=%s" % type)
             else:
                 raise ValueError("'type' must be either TEXT,IMAGE,RAW.")
 
-        if headers: args.append("--headers")
+        if headers:
+            args.append("--headers")
 
-        if preview: args.append("--add-preview")
+        if preview:
+            args.append("--add-preview")
 
         if font:
-            try: args.append("--fontname='%s %s %s'" % (font[0],font[1],font[2]))
+            try:
+                args.append(
+                    "--fontname='%s %s %s'" %
+                    (font[0], font[1], font[2]))
             except TypeError:
-                print("'font' should be an list of tuple in the format ['Family-list','style-options','size']")
+                print(
+                    "'font' should be an list of tuple in the format ['Family-list','style-options','size']")
 
         for generic_args in self.kwargs_helper(kwargs):
-            try: args.append("--%s" % generic_args)
-            except TypeError: args.append("--%s='%s'" % generic_args)
+            try:
+                args.append("--%s" % generic_args)
+            except TypeError:
+                args.append("--%s='%s'" % generic_args)
 
-        retval,rc = self.execute(args=args)
+        retval, rc = self.execute(args=args)
         if rc == 0:
             return retval
 
     # Text Info Dialog
-    def TextInfo(self,filename=None,editable=False,fore="#000000",back="#ffffff",font=["Sans","Regular","12"],wrap=False,
-    justify="left",margins=0,tail=False,show_uri=False,listen=False,plug=False,**kwargs):
+    def TextInfo(self, filename=None, editable=False, fore="#000000", back="#ffffff", font=["Sans", "Regular", "12"], wrap=False,
+                 justify="left", margins=0, tail=False, show_uri=False, listen=False, plug=False, **kwargs):
         """Show the text of a file to the user.
 
         This will raise a Yad Text Information Dialog presenting the user with
@@ -916,46 +1039,62 @@ class YAD:
                 if not listen:
                     args.append("--listen")
 
-        if editable: args.append("--editable")
+        if editable:
+            args.append("--editable")
 
         if fore.startswith("#"):
             args.append("--fore='%s'" % fore)
         else:
-            print("Warning:Color cannot be identified. Please use the appropriate color format.")
+            print(
+                "Warning:Color cannot be identified. Please use the appropriate color format.")
 
         if back.startswith("#"):
             args.append("--back='%s'" % back)
         else:
-            print("Warning:Color cannot be identified. Please use the appropriate color format.")
+            print(
+                "Warning:Color cannot be identified. Please use the appropriate color format.")
 
         if font:
-            try: args.append("--fontname='%s %s %s'" % (font[0],font[1],font[2]))
+            try:
+                args.append(
+                    "--fontname='%s %s %s'" %
+                    (font[0], font[1], font[2]))
             except TypeError:
-                print("'font' should be an list of tuple in the format ['Family-list','style-options','size']")
+                print(
+                    "'font' should be an list of tuple in the format ['Family-list','style-options','size']")
 
-        if wrap: args.append("--wrap")
+        if wrap:
+            args.append("--wrap")
 
-        if justify in ["left","right","center","fill"]:
+        if justify in ["left", "right", "center", "fill"]:
             args.append("--justify='%s'" % justify)
         else:
-             print("Warning: 'justify' must either be left,right,center,fill.")
+            print("Warning: 'justify' must either be left,right,center,fill.")
 
-        try: args.append("--margins=%d" % margins)
-        except TypeError: pass
+        try:
+            args.append("--margins=%d" % margins)
+        except TypeError:
+            pass
 
-        if tail: args.append("--tail")
+        if tail:
+            args.append("--tail")
 
-        if show_uri: args.append("--show-uri")
+        if show_uri:
+            args.append("--show-uri")
 
-        if listen: args.append("--listen")
+        if listen:
+            args.append("--listen")
 
         for generic_args in self.kwargs_helper(kwargs):
-            try: args.append("--%s" % generic_args)
-            except TypeError: args.append("--%s='%s'" % generic_args)
+            try:
+                args.append("--%s" % generic_args)
+            except TypeError:
+                args.append("--%s='%s'" % generic_args)
 
-        def update(s=None,ret=False):
+        def update(s=None, ret=False):
             child.setecho(False)
-            if s: child.sendline(s)
+            if s:
+                child.sendline(s)
             child.setecho(True)
             if ret:
                 retval = child.read()
@@ -970,23 +1109,26 @@ class YAD:
                 return rc
 
         if listen:
-            if plug: raise Exception("Error: 'plug' and 'listen' cannot be used together.")
+            if plug:
+                raise Exception(
+                    "Error: 'plug' and 'listen' cannot be used together.")
             cmd = " ".join([self.yad] + args)
             if sys.version_info[0] < 3:
-                child = pexpect.spawn(cmd,timeout=None)
+                child = pexpect.spawn(cmd, timeout=None)
             else:
-                child = pexpect.spawnu(cmd,timeout=None)
+                child = pexpect.spawnu(cmd, timeout=None)
             return update
         else:
-            if plug: return args
-            retval,rc = self.execute(args=args)
+            if plug:
+                return args
+            retval, rc = self.execute(args=args)
             if rc == 0:
                 return retval
 
     # Scale Dialog
-    def Scale(self,value=0,min=0,max=65525,step=1,page=10,
-    partial=False,hide=False,vertical=False,invert=False,
-    mark=None,plug=False,**kwargs):
+    def Scale(self, value=0, min=0, max=65525, step=1, page=10,
+              partial=False, hide=False, vertical=False, invert=False,
+              mark=None, plug=False, **kwargs):
         """Shows a scale Dialog. allows the user to select value between a range.
 
         Args:
@@ -1013,45 +1155,63 @@ class YAD:
             >>> print(x)
         """
         args = ["--scale"]
-        try:args.append("--value=%d" % value)
-        except TypeError:pass
-        try: args.append("--min-value=%d" % min)
-        except TypeError:pass
-        try: args.append("--max-value=%d" % max)
-        except TypeError:pass
-        try: args.append("--step=%d" % step)
-        except TypeError:pass
-        try: args.append("--page=%d" % page)
-        except TypeError:args.append("--page=%d" % step*10)
+        try:
+            args.append("--value=%d" % value)
+        except TypeError:
+            pass
+        try:
+            args.append("--min-value=%d" % min)
+        except TypeError:
+            pass
+        try:
+            args.append("--max-value=%d" % max)
+        except TypeError:
+            pass
+        try:
+            args.append("--step=%d" % step)
+        except TypeError:
+            pass
+        try:
+            args.append("--page=%d" % page)
+        except TypeError:
+            args.append("--page=%d" % step * 10)
 
-        if partial: args.append("--print-partial")
+        if partial:
+            args.append("--print-partial")
 
-        if hide: args.append("--hide-value")
+        if hide:
+            args.append("--hide-value")
 
-        if vertical: args.append("--vertical")
+        if vertical:
+            args.append("--vertical")
 
-        if invert: args.append("--invert")
+        if invert:
+            args.append("--invert")
 
         if mark:
             try:
-                for m in mark: args.append("--mark=%s:%d" % (m[0],int(m[1])))
+                for m in mark:
+                    args.append("--mark=%s:%d" % (m[0], int(m[1])))
             except TypeError:
-                print("Warning: 'mark' should be a multi-dimensional list or tuple of the format (('NAME',VALUE),('NAME',VALUE),...)")
-
+                print(
+                    "Warning: 'mark' should be a multi-dimensional list or tuple of the format (('NAME',VALUE),('NAME',VALUE),...)")
 
         for generic_args in self.kwargs_helper(kwargs):
-            try: args.append("--%s" % generic_args)
-            except TypeError: args.append("--%s='%s'" % generic_args)
+            try:
+                args.append("--%s" % generic_args)
+            except TypeError:
+                args.append("--%s='%s'" % generic_args)
 
-        if plug: return args
-        retval,rc = self.execute(args=args)
+        if plug:
+            return args
+        retval, rc = self.execute(args=args)
         if rc == 0:
             return int(retval)
 
     # Progress Dialog
-    def Progress(self,text=None,percent=0,rtl=False,autoclose=False,
-    autokill=False,pulsate=False,log=None,log_on_top=False,log_expanded=False,
-    log_height=30,**kwargs):
+    def Progress(self, text=None, percent=0, rtl=False, autoclose=False,
+                 autokill=False, pulsate=False, log=None, log_on_top=False, log_expanded=False,
+                 log_height=30, **kwargs):
         """Show a progress dialog to the user.
 
         Args:
@@ -1087,38 +1247,53 @@ class YAD:
             ...	  time.sleep(0.1)
         """
         if ('plug' or 'tabnum') in kwargs:
-            raise IndexError("'plug' or 'tabnum' cannot be used with file dialog")
+            raise IndexError(
+                "'plug' or 'tabnum' cannot be used with file dialog")
 
         args = ["--progress"]
-        if text: args.append("--progress-text='%s'" % text)
+        if text:
+            args.append("--progress-text='%s'" % text)
 
         if percent:
-            try:args.append("--percentage=%d" % percent)
-            except TypeError: pass
+            try:
+                args.append("--percentage=%d" % percent)
+            except TypeError:
+                pass
 
-        if rtl: args.append("--rtl")
+        if rtl:
+            args.append("--rtl")
 
-        if autoclose: args.append("--auto-close")
+        if autoclose:
+            args.append("--auto-close")
 
-        if autokill: args.append("--auto-kill")
+        if autokill:
+            args.append("--auto-kill")
 
-        if pulsate: args.append("--pulsate")
+        if pulsate:
+            args.append("--pulsate")
 
-        if log: args.append("--enable-log='%s'" % log)
+        if log:
+            args.append("--enable-log='%s'" % log)
 
-        if log_on_top: args.append("--log-on-top")
+        if log_on_top:
+            args.append("--log-on-top")
 
-        if log_expanded: args.append("--log-expanded")
+        if log_expanded:
+            args.append("--log-expanded")
 
-        try: args.append("--log-height=%d" % log_height)
-        except TypeError: pass
+        try:
+            args.append("--log-height=%d" % log_height)
+        except TypeError:
+            pass
 
         for generic_args in self.kwargs_helper(kwargs):
-            try: args.append("--%s" % generic_args)
-            except TypeError: args.append("--%s='%s'" % generic_args)
+            try:
+                args.append("--%s" % generic_args)
+            except TypeError:
+                args.append("--%s='%s'" % generic_args)
 
         # Amazing way to handle updating it. Thanks Brian Ramos
-        def update(percent,msg=''):
+        def update(percent, msg=''):
             """Call back function to update progress bar.
 
             Args:
@@ -1128,7 +1303,7 @@ class YAD:
             Returns:
                 status : returncode of the proc
             """
-            if type(percent) == float:
+            if isinstance(percent, float):
                 p.stdin.write('%f\n' % percent)
             else:
                 p.stdin.write('%d\n' % percent)
@@ -1137,13 +1312,13 @@ class YAD:
             p.stdin.flush()
             return p.returncode
 
-        p = Popen([self.yad] + args,stdin=PIPE,stdout=PIPE,universal_newlines=True)
+        p = Popen([self.yad] + args, stdin=PIPE,
+                  stdout=PIPE, universal_newlines=True)
         return update
 
-
-    def MultiProgress(self,bar=[],vertical=False,align="left",autoclose=False,
-    autokill=False,log=None,log_on_top=False,log_expanded=False,
-    log_height=30,**kwargs):
+    def MultiProgress(self, bar=[], vertical=False, align="left", autoclose=False,
+                      autokill=False, log=None, log_on_top=False, log_expanded=False,
+                      log_height=30, **kwargs):
         """Display multi progress bars dialog.
 
         Args:
@@ -1182,39 +1357,48 @@ class YAD:
             >>> x(100,2,msg="100% done")
         """
         if ('plug' or 'tabnum') in kwargs:
-            raise IndexError("'plug' or 'tabnum' cannot be used with file dialog")
+            raise IndexError(
+                "'plug' or 'tabnum' cannot be used with file dialog")
 
         args = ["--multi-progress"]
         for b in bar:
-            if b[1] in ["NORM","RTL","PULSE"]:
-                args.append("--bar=%s:%s" % (b[0],b[1]))
+            if b[1] in ["NORM", "RTL", "PULSE"]:
+                args.append("--bar=%s:%s" % (b[0], b[1]))
             else:
                 print("Warning: The TYPE of 'bar' must be either NORM,RTL,PULSE")
                 args.append("--bar=%s:NORM" % b[0])
 
-        if vertical: args.append("--vertical")
+        if vertical:
+            args.append("--vertical")
 
-        if align in ["left","right","center"]:
+        if align in ["left", "right", "center"]:
             args.append("--align=%s" % align)
         else:
             print("Warning: 'align' must either be left,right,or center.")
 
-        if autoclose: args.append("--auto-close")
+        if autoclose:
+            args.append("--auto-close")
 
-        if autokill: args.append("--auto-kill")
+        if autokill:
+            args.append("--auto-kill")
 
-        if log: args.append("--enable-log='%s'" % log)
+        if log:
+            args.append("--enable-log='%s'" % log)
 
-        if log_on_top: args.append("--log-on-top")
+        if log_on_top:
+            args.append("--log-on-top")
 
-        if log_expanded: args.append("--log-expanded")
+        if log_expanded:
+            args.append("--log-expanded")
 
         for generic_args in self.kwargs_helper(kwargs):
-            try: args.append("--%s" % generic_args)
-            except TypeError: args.append("--%s=%s" % generic_args)
+            try:
+                args.append("--%s" % generic_args)
+            except TypeError:
+                args.append("--%s=%s" % generic_args)
 
         # Amazing way to handle updating it. Thanks Brian Ramos
-        def update(percent,bar,msg=''):
+        def update(percent, bar, msg=''):
             """Call back function to update progress bar.
 
             Args:
@@ -1225,20 +1409,21 @@ class YAD:
             Returns:
                 status : returncode of the proc
             """
-            if type(percent) == float:
-                p.stdin.write("%d:%f\n" % (bar,percent))
+            if isinstance(percent, float):
+                p.stdin.write("%d:%f\n" % (bar, percent))
             else:
-                p.stdin.write("%d:%d\n" % (bar,percent))
+                p.stdin.write("%d:%d\n" % (bar, percent))
             if msg:
-                p.stdin.write('%d:# %s\n' % (bar,msg))
+                p.stdin.write('%d:# %s\n' % (bar, msg))
             p.stdin.flush()
             return p.returncode
 
-        p = Popen([self.yad] + args,stdin=PIPE,stdout=PIPE,universal_newlines=True)
+        p = Popen([self.yad] + args, stdin=PIPE,
+                  stdout=PIPE, universal_newlines=True)
         return update
 
-    def Form(self,fields=[],align="left",cols=1,sep="|",item_sep="!",
-    scroll=False,quoted=False,date_format="%x",output_by_row=False,plug=False,**kwargs):
+    def Form(self, fields=[], align="left", cols=1, sep="|", item_sep="!",
+             scroll=False, quoted=False, date_format="%x", output_by_row=False, plug=False, **kwargs):
         """Shows a Form Dialog.
 
         Args:
@@ -1286,64 +1471,87 @@ class YAD:
         def parser(f):
             args = []
             # Parse Field types
-            if f[0] == "": args.append("--field='%s'" % f[1])
+            if f[0] == "":
+                args.append("--field='%s'" % f[1])
             else:
-                if isinstance(f[1],str): args.append("--field='%s':%s" % (str(f[1]),f[0]))
-                else: args.append("--field='%s':%s" % (item_sep.join([str(x) for x in f[1]]),f[0]))
+                if isinstance(f[1], str):
+                    args.append("--field='%s':%s" % (str(f[1]), f[0]))
+                else:
+                    args.append("--field='%s':%s" %
+                                (item_sep.join([str(x) for x in f[1]]), f[0]))
 
             # Parse Data
-            if f[0].upper() == "LBL": args.append("''")
+            if f[0].upper() == "LBL":
+                args.append("''")
             elif f[0].upper() == "NUM":
-                try: args.append("'%s'" % (item_sep.join([str(i) for i in f[2][:2]])+".."+item_sep.join([str(i) for i in f[2][3:]])))
+                try:
+                    args.append("'%s'" %
+                                (item_sep.join([str(i) for i in f[2][:2]]) +
+                                 ".." +
+                                 item_sep.join([str(i) for i in f[2][3:]])))
                 except IndexError:
-                    x = [0,0,65525,1,2]
-                    args.append("'%s'" % (item_sep.joint([str(i) for i in x[:2]])+".."+item_sep.join([str(i) for i in x[3:]])))
+                    x = [0, 0, 65525, 1, 2]
+                    args.append("'%s'" %
+                                (item_sep.joint([str(i) for i in x[:2]]) +
+                                 ".." +
+                                 item_sep.join([str(i) for i in x[3:]])))
             elif f[0].upper() == "CHK":
-                if f[2].upper() in ["TRUE","FALSE"]:
+                if f[2].upper() in ["TRUE", "FALSE"]:
                     args.append("'%s'" % f[2].upper())
                 else:
                     args.append("'FALSE'")
-            elif f[0].upper() in ["CB","CBE"]:
+            elif f[0].upper() in ["CB", "CBE"]:
                 args.append("'%s'" % item_sep.join([str(x) for x in f[2]]))
             elif f[0].upper() == "FN":
                 args.append("'%s'" % " ".join([str(x) for x in f[2]]))
             else:
                 # Fields that require direct values
-                try:args.append("'%s'" % str(f[2]))
-                except IndexError:pass
+                try:
+                    args.append("'%s'" % str(f[2]))
+                except IndexError:
+                    pass
 
             return args
 
         args = ["--form"]
 
-        if align in ["left","right","center"]:
+        if align in ["left", "right", "center"]:
             args.append("--align='%s'" % align)
 
-        try: args.append("--columns=%d" % cols)
-        except TypeError: pass
+        try:
+            args.append("--columns=%d" % cols)
+        except TypeError:
+            pass
 
         args.append("--separator='%s'" % sep)
 
         args.append("--item-separator='%s'" % item_sep)
 
-        if scroll: args.append("--scroll")
+        if scroll:
+            args.append("--scroll")
 
-        if quoted: args.append("--quoted-output")
+        if quoted:
+            args.append("--quoted-output")
 
-        if date_format: args.append("--date-format=%s" %date_format)
+        if date_format:
+            args.append("--date-format=%s" % date_format)
 
-        if output_by_row: args.append("--output-by-row")
+        if output_by_row:
+            args.append("--output-by-row")
 
         if fields:
             for field in fields:
                 args += parser(field)
 
         for generic_args in self.kwargs_helper(kwargs):
-            try: args.append("--%s" % generic_args)
-            except TypeError: args.append("--%s='%s'" % generic_args)
+            try:
+                args.append("--%s" % generic_args)
+            except TypeError:
+                args.append("--%s='%s'" % generic_args)
 
-        if plug: return args
-        retval,rc = self.execute(args=args)
+        if plug:
+            return args
+        retval, rc = self.execute(args=args)
         if rc == 0:
             retval = retval.splitlines()[-1].split(sep)
             dic = {}
@@ -1351,7 +1559,7 @@ class YAD:
                 dic[i] = retval.pop(0)
             return dic
 
-    def Notebook(self,key=None,tabpos="top",border=None,tabs=[],**kwargs):
+    def Notebook(self, key=None, tabpos="top", border=None, tabs=[], **kwargs):
         """Shows up a Notebook Dialog. It is a special dialog that swallows other dialogs in it.
         It identifies the other dialogs with the 'plug' option and uses a unique randomly generated key to create the dialog.
         Please check example.
@@ -1385,25 +1593,27 @@ class YAD:
         """
         args = ["--notebook"]
         if not key:
-            key = random.randInt(10000,20000)
+            key = random.randInt(10000, 20000)
         args.append("--key=%d" % key)
 
-        if tabpos in ["top","bottom","left","right"]:
+        if tabpos in ["top", "bottom", "left", "right"]:
             args.append("--tab-pos='%s'" % tabpos)
 
         if border:
-            try: args.append("--tab-borders=%d" % border)
-            except TypeError: pass
+            try:
+                args.append("--tab-borders=%d" % border)
+            except TypeError:
+                pass
 
         arr = []
         tf = []
-        for i,tab in enumerate(tabs):
+        for i, tab in enumerate(tabs):
             f = tempfile.NamedTemporaryFile()
             tf.append(f)
             args.append("--tab='%s'" % tab[0])
             x = [self.yad]
             x.append("--plug=%d" % key)
-            x.append("--tabnum=%d" % (i+1))
+            x.append("--tabnum=%d" % (i + 1))
             x += tab[2]
             x.append("&>")
             x.append(f.name)
@@ -1411,28 +1621,31 @@ class YAD:
             arr.append(" ".join(x))
 
         for generic_args in self.kwargs_helper(kwargs):
-            try: args.append("--%s" % generic_args)
-            except TypeError: args.append("--%s='%s'" % generic_args)
+            try:
+                args.append("--%s" % generic_args)
+            except TypeError:
+                args.append("--%s='%s'" % generic_args)
 
         if sys.version_info[0] < 3:
-            child = pexpect.spawn(self.shell,timeout=None)
+            child = pexpect.spawn(self.shell, timeout=None)
         else:
-            child = pexpect.spawnu(self.shell,timeout=None)
+            child = pexpect.spawnu(self.shell, timeout=None)
         child.setecho(False)
         child.sendline("ipcrm -m %s" % key)
         for i in arr:
             child.sendline(i)
         child.setecho(True)
-        retval,rc = self.execute(args=args)
-        #child.close()
+        retval, rc = self.execute(args=args)
+        # child.close()
         if rc == 0:
             dic = {}
-            for i,tab in enumerate(tabs):
-                dic[i+1] = tf[i].read()
+            for i, tab in enumerate(tabs):
+                dic[i + 1] = tf[i].read()
                 tf[i].close()
             return dic
 
-    def Html(self,uri=None,browser=False,print_uri=False, mime="text/html",encoding="UTF-8",plug=False,**kwargs):
+    def Html(self, uri=None, browser=False, print_uri=False,
+             mime="text/html", encoding="UTF-8", plug=False, **kwargs):
         """Creates a HTML Dialog.
 
         Args:
@@ -1448,22 +1661,29 @@ class YAD:
         """
         args = ["--html"]
 
-        if uri: args.append("--uri=%s" % uri)
+        if uri:
+            args.append("--uri=%s" % uri)
 
-        if browser: args.append("--browser")
+        if browser:
+            args.append("--browser")
 
-        if print_uri: args.append("--print-uri")
+        if print_uri:
+            args.append("--print-uri")
 
-        if mime: args.append("--mime='%s'" % mime)
+        if mime:
+            args.append("--mime='%s'" % mime)
 
-        if encoding: args.append("--encoding='%s'" % encoding)
+        if encoding:
+            args.append("--encoding='%s'" % encoding)
 
-        if plug: return args
-        retval,rc = self.execute(args=args)
+        if plug:
+            return args
+        retval, rc = self.execute(args=args)
         if rc == 0:
             return retval
 
-    def Paned(self,key=None,orient="horizontal",splitter=None,tabs=[],**kwargs):
+    def Paned(self, key=None, orient="horizontal",
+              splitter=None, tabs=[], **kwargs):
         """Shows up a Paned Dialog. It is a special dialog that swallows other dialogs in it.
         It identifies the other dialogs with the 'plug' option and uses a unique randomly generated key to create the dialog.
         Please check example.
@@ -1495,25 +1715,27 @@ class YAD:
         """
         args = ["--paned"]
         if not key:
-            key = random.randInt(10000,20000)
+            key = random.randInt(10000, 20000)
         args.append("--key=%d" % key)
 
-        if orient in ["horizontal","vertical"]:
+        if orient in ["horizontal", "vertical"]:
             args.append("--orient='%s'" % orient)
 
         if splitter:
-            try: args.append("--splitter=%d" % splitter)
-            except TypeError: pass
+            try:
+                args.append("--splitter=%d" % splitter)
+            except TypeError:
+                pass
 
         arr = []
         tf = []
-        for i,tab in enumerate(tabs):
+        for i, tab in enumerate(tabs):
             f = tempfile.NamedTemporaryFile()
             tf.append(f)
             args.append("--tab='%s'" % tab[0])
             x = [self.yad]
             x.append("--plug=%d" % key)
-            x.append("--tabnum=%d" % (i+1))
+            x.append("--tabnum=%d" % (i + 1))
             x += tab[2]
             x.append("&>")
             x.append(f.name)
@@ -1521,28 +1743,30 @@ class YAD:
             arr.append(" ".join(x))
 
         for generic_args in self.kwargs_helper(kwargs):
-            try: args.append("--%s" % generic_args)
-            except TypeError: args.append("--%s='%s'" % generic_args)
+            try:
+                args.append("--%s" % generic_args)
+            except TypeError:
+                args.append("--%s='%s'" % generic_args)
 
         if sys.version_info[0] < 3:
-            child = pexpect.spawn(self.shell,timeout=None)
+            child = pexpect.spawn(self.shell, timeout=None)
         else:
-            child = pexpect.spawnu(self.shell,timeout=None)
+            child = pexpect.spawnu(self.shell, timeout=None)
         child.setecho(False)
         child.sendline("ipcrm -m %s" % key)
         for i in arr:
             child.sendline(i)
         child.setecho(True)
-        retval,rc = self.execute(args=args)
-        #child.close()
+        retval, rc = self.execute(args=args)
+        # child.close()
         if rc == 0:
             dic = {}
-            for i,tab in enumerate(tabs):
-                dic[i+1] = tf[i].read()
+            for i, tab in enumerate(tabs):
+                dic[i + 1] = tf[i].read()
                 tf[i].close()
             return dic
 
-    def Picture(self,filename,size="orig",inc=None,**kwargs):
+    def Picture(self, filename, size="orig", inc=None, **kwargs):
         """Shows up a Picture Dialog. Takes a image file and displays it.
         Please check example.
 
@@ -1566,26 +1790,30 @@ class YAD:
         try:
             os.stat(filename)
             args.append("--filename='%s'" % filename)
-        except FileNotFoundException:
+        except FileNotFoundError:
             print("Warning: Invalid file for 'filename'")
 
-        if size in ["orig","fit"]:
+        if size in ["orig", "fit"]:
             args.append("--size='%s'" % size)
 
         if inc:
-            try: args.append("--inc=%d" % inc)
-            except TypeError: pass
+            try:
+                args.append("--inc=%d" % inc)
+            except TypeError:
+                pass
 
         for generic_args in self.kwargs_helper(kwargs):
-            try: args.append("--%s" % generic_args)
-            except TypeError: args.append("--%s='%s'" % generic_args)
+            try:
+                args.append("--%s" % generic_args)
+            except TypeError:
+                args.append("--%s='%s'" % generic_args)
 
-        retval,rc = self.execute(args=args)
+        retval, rc = self.execute(args=args)
         if rc == 0:
             return retval
 
     # execute yad
-    def execute(self,args=[],plug=False,**kwargs):
+    def execute(self, args=[], plug=False, **kwargs):
         """Exceutes yad using pexpect module.
 
         Args:
@@ -1604,42 +1832,47 @@ class YAD:
             >>> print(x)
         """
         for generic_args in self.kwargs_helper(kwargs):
-            try: args.append("--%s" % generic_args)
-            except TypeError: args.append("--%s='%s'" % generic_args)
+            try:
+                args.append("--%s" % generic_args)
+            except TypeError:
+                args.append("--%s='%s'" % generic_args)
 
         if any("--listen" in s for s in args) or "listen" in kwargs:
-            if plug: raise Exception("Error: 'plug' and 'listen' cannot be used together")
+            if plug:
+                raise Exception(
+                    "Error: 'plug' and 'listen' cannot be used together")
         else:
-            if plug: return args
+            if plug:
+                return args
         cmd = " ".join([self.yad] + args)
         if sys.version_info[0] < 3:
-            retval,rc = pexpect.run(cmd,withexitstatus=True,timeout=None)
+            retval, rc = pexpect.run(cmd, withexitstatus=True, timeout=None)
         else:
-            retval,rc = pexpect.runu(cmd,withexitstatus=True,timeout=None)
+            retval, rc = pexpect.runu(cmd, withexitstatus=True, timeout=None)
         retval = retval.strip()
-        return (retval,rc)
+        return (retval, rc)
 
     # kwargs helper
-    def kwargs_helper(self,kwargs):
+    def kwargs_helper(self, kwargs):
         """This function preprocesses the kwargs dictionary to sanitize it."""
         args = []
 
         # These are boolean parameters that are passed in kwargs.
-        generic_bool = ["center","print-xid","image-on-top",
-        "no-buttons","no-markup","always-print-result",
-        "dialog-sep","sticky","fixed",
-        "mouse","on-top","undecorated",
-        "skip-taskbar","maximized","fullscreen",
-        "selectable-labels",'listen','no-escape']
+        generic_bool = ["center", "print-xid", "image-on-top",
+                        "no-buttons", "no-markup", "always-print-result",
+                        "dialog-sep", "sticky", "fixed",
+                        "mouse", "on-top", "undecorated",
+                        "skip-taskbar", "maximized", "fullscreen",
+                        "selectable-labels", 'listen', 'no-escape']
 
         # This is a dictionary of optional parameters that would create
         # syntax errors in python if they were passed in as kwargs.
-        generic = {'window_icon': 'window-icon','timeout_indicator' : 'timeout-indicator',
-        'kill_parent' : 'kill-parent','print_xid' : 'print-xid','text_align' : 'text-align',
-        'no_buttons' : 'no-buttons','buttons_layout' : 'buttons-layout','no_markup' : 'no-markup',
-        'always_print_result' : 'always-print-result','dialog_sep' : 'dialog-sep',
-        'on_top' : 'on-top','skip_taskbar' : 'skip-taskbar', 'selectable_labels' : 'selectable-labels',
-        'image_path' : 'image-path', 'no_escape' : 'no-escape', 'image_path' : 'image-path', 'icon_theme' : 'icon-theme'}
+        generic = {'window_icon': 'window-icon', 'timeout_indicator': 'timeout-indicator',
+                   'kill_parent': 'kill-parent', 'print_xid': 'print-xid', 'text_align': 'text-align',
+                   'no_buttons': 'no-buttons', 'buttons_layout': 'buttons-layout', 'no_markup': 'no-markup',
+                   'always_print_result': 'always-print-result', 'dialog_sep': 'dialog-sep',
+                   'on_top': 'on-top', 'skip_taskbar': 'skip-taskbar', 'selectable_labels': 'selectable-labels',
+                   'image_path': 'image-path', 'no_escape': 'no-escape', 'image_path': 'image-path', 'icon_theme': 'icon-theme'}
 
         for param, value in kwargs.items():
             param = generic.get(param, param)
@@ -1647,7 +1880,7 @@ class YAD:
                 if value:
                     args.append((param))
             elif param.startswith("button"):
-                args.append(("button",value))
+                args.append(("button", value))
             else:
                 args.append((param, value))
         return args

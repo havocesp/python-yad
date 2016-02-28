@@ -1,6 +1,17 @@
 [Current]
 ^^^^^^^^^
 
+-  `3838b20 <../../commit/3838b20>`__ - **(Sagar Dwibhashyam)** Added
+   Contribution guide
+
+0.9.10-r
+^^^^^^^^
+
+0.9.10
+^^^^^^
+
+-  `c9d29b1 <../../commit/c9d29b1>`__ - **(Sagar Dwibhashyam)** Updated
+   Folder structure, and also fixed few bugs
 -  `2c1fb03 <../../commit/2c1fb03>`__ - **(Sagar Dwibhashyam)** Updated
    changelog
 -  `40e454c <../../commit/40e454c>`__ - **(Sagar Dwibhashyam)** Updated
