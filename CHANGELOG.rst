@@ -1,6 +1,11 @@
 [Current]
 ^^^^^^^^^
 
+0.9.11
+^^^^^^
+
+-  `a070d5e <../../commit/a070d5e>`__ - **(Sagar Dwibhashyam)**
+   Formatting the code and styling it to meet pep8 requirements
 -  `3838b20 <../../commit/3838b20>`__ - **(Sagar Dwibhashyam)** Added
    Contribution guide
 

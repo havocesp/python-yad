@@ -20,7 +20,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
-from datetime import date
+from datetime import datetime
 from subprocess import Popen, PIPE
 from signal import signal, SIGPIPE, SIG_DFL
 import os
@@ -30,8 +30,9 @@ import imghdr
 import random
 import pexpect
 import tempfile
+import locale
 
-__version__ = "0.9.11"
+__version__ = "0.9.12"
 
 __doc__ = """python-yad is interface to yad for python. Inspired by the PyZenity Project.
 
@@ -131,6 +132,7 @@ class YAD:
             2015-01-01
         """
         args = ["--calendar"]
+        locale.setlocale(locale.LC_TIME, '')
 
         if day:
             try:
@@ -168,8 +170,10 @@ class YAD:
         retval, rc = self.execute(args=args)
         if rc == 0:
             retval = retval.split('\n')[-1]
-            month, day, year = [int(x) for x in re.split('[-,/,.]', retval)]
-            return date(year, month, day)
+            return datetime.strptime(
+                retval, locale.nl_langinfo(locale.D_FMT)).date()
+            #month, day, year = [int(x) for x in re.split('[-,/,.]', retval)]
+            # return date(year, month, day)
 
     # Color Dialog
     def Color(self, color='#ffffff', extra=False, palette='/etc/X11/rgb.txt',
