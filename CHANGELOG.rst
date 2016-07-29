@@ -1,6 +1,18 @@
 [Current]
 ^^^^^^^^^
 
+Fixing git tree
+
+fixed missing search\_col to List args
+
+List args was missing search\_col option
+
+See merge request !1 \* `cf49a9a <../../commit/cf49a9a>`__ - **(Sagar
+DV)** misc update \* `8eeafc1 <../../commit/8eeafc1>`__ - **(Christopher
+Lσшƨσп)** fixed missing search\_col to List args \*
+`5bcdaa3 <../../commit/5bcdaa3>`__ - **(Sagar Dwibhashyam)** Changed
+Calendar to get return value based on locale
+
 0.9.11
 ^^^^^^
 
@@ -174,4 +186,3 @@ Conflicts: CHANGELOG.rst
    functions. version update: 0.7.7 coverted most of code for pexpect.
    Still some more to do. version update: 0.7.6 modified the list listen
    functionality. Initial commit
-
