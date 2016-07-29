@@ -727,6 +727,11 @@ class YAD:
         except TypeError:
             pass
         try:
+            if search_col:
+                args.append('--search-column=%d' % search_col)
+        except TypeError:
+            pass
+        try:
             if limit:
                 args.append('--limit=%d' % limit)
         except TypeError:
