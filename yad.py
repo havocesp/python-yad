@@ -1561,11 +1561,12 @@ class YAD:
         if plug:
             return args
         retval, rc = self.execute(args=args)
-        if rc == 0:
+        if rc not in [1,70,252]:
             retval = retval.splitlines()[-1].split(sep)
             dic = {}
             for i in range(len(fields)):
                 dic[i] = retval.pop(0)
+            dic['rc'] = rc
             return dic
 
     def Notebook(self, key=None, tabpos="top", border=None, tabs=[], **kwargs):
