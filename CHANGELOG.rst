@@ -1,6 +1,15 @@
 [Current]
 ^^^^^^^^^
 
+Added rc return code to Form output
+
+-  Allowed alternative return codes when using button options.
+-  Added return codes to the returned dictionary.
+
+See merge request !2 \* `de45290 <../../commit/de45290>`__ -
+**(Christopher Lσшƨσп)** Added rc return code to Form output \*
+`adcc8ff <../../commit/adcc8ff>`__ - **(Sagar DV)** Updated version
+
 Fixing git tree
 
 fixed missing search\_col to List args

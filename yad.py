@@ -32,7 +32,7 @@ import pexpect
 import tempfile
 import locale
 
-__version__ = "0.9.12"
+__version__ = "0.9.13"
 
 __doc__ = """python-yad is interface to yad for python. Inspired by the PyZenity Project.
 
