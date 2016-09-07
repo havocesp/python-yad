@@ -1691,6 +1691,7 @@ class YAD:
                 args.append("--%s" % generic_args)
             except TypeError:
                 args.append("--%s='%s'" % generic_args)
+                
         if plug:
             return args
         retval, rc = self.execute(args=args)
