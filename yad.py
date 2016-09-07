@@ -1686,6 +1686,11 @@ class YAD:
         if encoding:
             args.append("--encoding='%s'" % encoding)
 
+        for generic_args in self.kwargs_helper(kwargs):
+            try:
+                args.append("--%s" % generic_args)
+            except TypeError:
+                args.append("--%s='%s'" % generic_args)
         if plug:
             return args
         retval, rc = self.execute(args=args)
