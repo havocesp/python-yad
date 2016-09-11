@@ -1,6 +1,14 @@
 [Current]
 ^^^^^^^^^
 
+Master
+
+See merge request !3 \* `8fcdea0 <../../commit/8fcdea0>`__ -
+**(Christopher Lσшƨσп)** Fixed spacing \*
+`b98d7dc <../../commit/b98d7dc>`__ - **(Christopher Lσшƨσп)** Added
+generic args to Html function \* `3827049 <../../commit/3827049>`__ -
+**(Sagar DV)** Updated version and changelog
+
 Added rc return code to Form output
 
 -  Allowed alternative return codes when using button options.

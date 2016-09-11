@@ -14,3 +14,8 @@ I would advice you to follow this git work-flow:
 From there Ill check it out and merge the code.
 
 Thank you.
+
+CONTRIBUTORS
+============
+
+Christopher Lσшƨσп (lowson.chris@gmail.com)

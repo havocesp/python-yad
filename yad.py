@@ -32,7 +32,7 @@ import pexpect
 import tempfile
 import locale
 
-__version__ = "0.9.13"
+__version__ = "0.9.14"
 
 __doc__ = """python-yad is interface to yad for python. Inspired by the PyZenity Project.
 
@@ -1691,7 +1691,7 @@ class YAD:
                 args.append("--%s" % generic_args)
             except TypeError:
                 args.append("--%s='%s'" % generic_args)
-                
+
         if plug:
             return args
         retval, rc = self.execute(args=args)
