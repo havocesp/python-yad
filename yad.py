@@ -1454,7 +1454,7 @@ class YAD:
             IndexError, ValueError
 
         Examples:
-            >>> x = (
+            >>> x1 = (
             ... ("LBL","Well this is label"),
             ... ("","Default text entry","hello there"),
             ... ("H","Hidden label","Hidden text"),
@@ -1474,8 +1474,31 @@ class YAD:
             ... ("CHK","Checkbox","true"),
             ... ("BTN",("gtk-ok","","OK"),"echo hi"),
             ... )
-            >>> y = yad.Form(fields=x)
-            >>> print(y)
+            >>> y1 = yad.Form(fields=x1)
+            >>> print(y1)
+            
+            >>> x2 = '''                
+            ... LBL:Well this is label
+            ... :Default text entry:hello there
+            ... H:Hidden label:Hidden text
+            ... NUM:Numeric:(0,0,100,1,2)
+            ... CB:Combo box:("val1","^val2","val3")
+            ... CBE:Editable Combo box:("val1","^val2","val3")
+            ... FL:Select a file:
+            ... SFL:File to save:
+            ... DIR:Select Directory:
+            ... CDIR:Create Directory:
+            ... FN:Select Font:("Sans","Regular","12")
+            ... MFL:Select Multiple files:
+            ... DT:Date:
+            ... SCL:Scale:
+            ... CLR:Color Palette:
+            ... TXT:Multi-line text entry:
+            ... CHK:Checkbox:true
+            ... BTN:("gtk-ok","","OK"):echo hi
+            ... '''
+            >>> y2 = yad.Form(fields=x2)
+            >>> print(y2)
         """
         def parser(f):
             args = []
@@ -1549,6 +1572,28 @@ class YAD:
             args.append("--output-by-row")
 
         if fields:
+            # If fields is a string, convert it to a list of tuples
+            # Format as "type:label:param" or ":label:param" as per the tuple form
+            #  The first two fields may not contain a colon
+            # Ignore empty / whitespace-only lines
+            if isinstance(fields, str):
+                tmp = []
+                for l in fields.strip().split('\n'):
+                    if not l: continue
+                    if l.count(':') >= 2:
+                        l = l.strip()
+                        l = l.split(':', maxsplit=2)
+                    else:
+                        l = l.split(':') + [''] * (2 - l.count(':'))
+        
+                    if l[0] in 'NUM CB CBE FN'.split():
+                        l[2] = eval(l[2])
+                    elif l[0] == 'BTN':
+                        l[1] = eval(l[1])
+                    tmp.append(l)
+                fields = tmp
+                del tmp
+
             for field in fields:
                 args += parser(field)
 
