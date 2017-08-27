@@ -18,5 +18,5 @@ Thank you.
 CONTRIBUTORS
 ============
 
-Christopher Lσшƨσп (lowson.chris@gmail.com)
-Russell Jones (@Russell-Jones-OxPhys)
+- Christopher Lσшƨσп (lowson.chris@gmail.com)
+- Russell Jones (@Russell-Jones-OxPhys)
