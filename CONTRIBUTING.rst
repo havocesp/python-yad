@@ -19,3 +19,4 @@ CONTRIBUTORS
 ============
 
 Christopher Lσшƨσп (lowson.chris@gmail.com)
+Russell Jones (@Russell-Jones-OxPhys)
