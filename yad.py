@@ -31,6 +31,7 @@ import random
 import pexpect
 import tempfile
 import locale
+from security import safe_command
 
 __version__ = "0.9.14"
 
@@ -1321,7 +1322,7 @@ class YAD:
             p.stdin.flush()
             return p.returncode
 
-        p = Popen([self.yad] + args, stdin=PIPE,
+        p = safe_command.run(Popen, [self.yad] + args, stdin=PIPE,
                   stdout=PIPE, universal_newlines=True)
         return update
 
@@ -1427,7 +1428,7 @@ class YAD:
             p.stdin.flush()
             return p.returncode
 
-        p = Popen([self.yad] + args, stdin=PIPE,
+        p = safe_command.run(Popen, [self.yad] + args, stdin=PIPE,
                   stdout=PIPE, universal_newlines=True)
         return update
 
