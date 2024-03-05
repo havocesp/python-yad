@@ -278,7 +278,7 @@ class YAD:
     # Text Entry Dialog
     def Entry(self, label=None, text=None, hide_text=False, use_completion=False,
               editable=False, numeric=None, licon=None, licon_action=None, ricon=None,
-              ricon_action=None, data=[], plug=False, **kwargs):
+              ricon_action=None, data=None, plug=False, **kwargs):
         """Prompt the user to enter a value.
         This will raise a Yad Combo Box Entry Dialog for the user.
 
@@ -309,6 +309,7 @@ class YAD:
 
             >>> z = yad.Entry(label="pick an item or type one",data=["","apple","orange","banana"])
         """
+        data = [] if data is None else data
         args = ["--entry"]
         if label:
             args.append("--entry-label='%s'" % label)
@@ -586,7 +587,7 @@ class YAD:
             return retval.split(sep)
 
     # Font Selection Dialog
-    def Font(self, font=["Sans", "Regular", "12"],
+    def Font(self, font=None,
              preview=None, plug=False, **kwargs):
         """Prompts the user to select a font.
 
@@ -605,6 +606,7 @@ class YAD:
             >>> x = yad.Font()
             >>> print(x)
         """
+        font = ["Sans", "Regular", "12"] if font is None else font
         args = ["--font"]
         try:
             args.append("--fontname='%s %s %s'" % (font[0], font[1], font[2]))
@@ -628,11 +630,11 @@ class YAD:
             return retval.split(' ')
 
     # List Dialog
-    def List(self, colnames=[], boolstyle=None, sep='|', multi=False,
+    def List(self, colnames=None, boolstyle=None, sep='|', multi=False,
              editable=False, no_headers=False, no_click=False, print_all=False,
              print_col=0, hide_col=None, expand_col=0, search_col=0, limit=None,
              ellipsize=None, dclick_action=None, regex=None, listen=False,
-             quoted=False, data=[], plug=False, **kwargs):
+             quoted=False, data=None, plug=False, **kwargs):
         """Shows a List Dialog box which allows the user to select an item.
 
         Args:
@@ -676,6 +678,8 @@ class YAD:
             >>> print(x)
 
         """
+        colnames = [] if colnames is None else colnames
+        data = [] if data is None else data
         args = ["--list"]
         #for col in colnames: args.append("--column='%s'" % col)
         for cols in colnames:
@@ -768,7 +772,8 @@ class YAD:
                 for d in dat:
                     args.append("'%s'" % d)
 
-        def update(data=[], ret=False):
+        def update(data=None, ret=False):
+            data = [] if data is None else data
             child.setecho(False)
             if data:
                 for dat in data:
@@ -808,7 +813,7 @@ class YAD:
                 return retval
 
     # Notification Dialog
-    def Notify(self, cmd=None, listen=False, sep='|', item_sep='!', menu=[],
+    def Notify(self, cmd=None, listen=False, sep='|', item_sep='!', menu=None,
                no_middle=False, hidden=False, icon=None, text=None, **kwargs):
         """Sets a Notification icon in the message tray.
 
@@ -844,6 +849,7 @@ class YAD:
         Examples:
             >>> yad.Notify(cmd="nautilus",menu=(("nautilus","nautilus",""),("evince","evince"),("quit","quit","")))
         """
+        menu = [] if menu is None else menu
         if ('plug' or 'tabnum') in kwargs:
             raise IndexError(
                 "'plug' or 'tabnum' cannot be used with Notification dialog")
@@ -890,7 +896,8 @@ class YAD:
                 args.append("--%s='%s'" % generic_args)
 
         def update(icon=None, tooltip=None, visible="true",
-                   action=None, menu=[], q=False, ret=False):
+                   action=None, menu=None, q=False, ret=False):
+            menu = [] if menu is None else menu
             child.setecho(False)
             if icon:
                 try:
@@ -1002,7 +1009,7 @@ class YAD:
             return retval
 
     # Text Info Dialog
-    def TextInfo(self, filename=None, editable=False, fore="#000000", back="#ffffff", font=["Sans", "Regular", "12"], wrap=False,
+    def TextInfo(self, filename=None, editable=False, fore="#000000", back="#ffffff", font=None, wrap=False,
                  justify="left", margins=0, tail=False, show_uri=False, listen=False, plug=False, **kwargs):
         """Show the text of a file to the user.
 
@@ -1038,6 +1045,7 @@ class YAD:
             >>> x = yad.TextInfo("test.txt",editable=True,wrap=True,justify="fill",tail=True)
             >>> print(x)
         """
+        font = ["Sans", "Regular", "12"] if font is None else font
         args = ["--text-info"]
         if filename:
             try:
@@ -1325,7 +1333,7 @@ class YAD:
                   stdout=PIPE, universal_newlines=True)
         return update
 
-    def MultiProgress(self, bar=[], vertical=False, align="left", autoclose=False,
+    def MultiProgress(self, bar=None, vertical=False, align="left", autoclose=False,
                       autokill=False, log=None, log_on_top=False, log_expanded=False,
                       log_height=30, **kwargs):
         """Display multi progress bars dialog.
@@ -1365,6 +1373,7 @@ class YAD:
             >>> x(100,1,msg="100% done")
             >>> x(100,2,msg="100% done")
         """
+        bar = [] if bar is None else bar
         if ('plug' or 'tabnum') in kwargs:
             raise IndexError(
                 "'plug' or 'tabnum' cannot be used with file dialog")
@@ -1431,7 +1440,7 @@ class YAD:
                   stdout=PIPE, universal_newlines=True)
         return update
 
-    def Form(self, fields=[], align="left", cols=1, sep="|", item_sep="!",
+    def Form(self, fields=None, align="left", cols=1, sep="|", item_sep="!",
              scroll=False, quoted=False, date_format="%x", output_by_row=False, plug=False, **kwargs):
         """Shows a Form Dialog.
 
@@ -1500,6 +1509,7 @@ class YAD:
             >>> y2 = yad.Form(fields=x2)
             >>> print(y2)
         """
+        fields = [] if fields is None else fields
         def parser(f):
             args = []
             # Parse Field types
@@ -1614,7 +1624,7 @@ class YAD:
             dic['rc'] = rc
             return dic
 
-    def Notebook(self, key=None, tabpos="top", border=None, tabs=[], **kwargs):
+    def Notebook(self, key=None, tabpos="top", border=None, tabs=None, **kwargs):
         """Shows up a Notebook Dialog. It is a special dialog that swallows other dialogs in it.
         It identifies the other dialogs with the 'plug' option and uses a unique randomly generated key to create the dialog.
         Please check example.
@@ -1646,6 +1656,7 @@ class YAD:
             >>> tabdata = yad.Notebook(12345,tabpos='bottom',tabs=tabs)
             >>> print(tabdata)
         """
+        tabs = [] if tabs is None else tabs
         args = ["--notebook"]
         if not key:
             key = random.randInt(10000, 20000)
@@ -1744,7 +1755,7 @@ class YAD:
             return retval
 
     def Paned(self, key=None, orient="horizontal",
-              splitter=None, tabs=[], **kwargs):
+              splitter=None, tabs=None, **kwargs):
         """Shows up a Paned Dialog. It is a special dialog that swallows other dialogs in it.
         It identifies the other dialogs with the 'plug' option and uses a unique randomly generated key to create the dialog.
         Please check example.
@@ -1774,6 +1785,7 @@ class YAD:
             >>> tabdata = yad.Paned(12345,orient='horizontal',tabs=tabs)
             >>> print(tabdata)
         """
+        tabs = [] if tabs is None else tabs
         args = ["--paned"]
         if not key:
             key = random.randInt(10000, 20000)
@@ -1874,7 +1886,7 @@ class YAD:
             return retval
 
     # execute yad
-    def execute(self, args=[], plug=False, **kwargs):
+    def execute(self, args=None, plug=False, **kwargs):
         """Exceutes yad using pexpect module.
 
         Args:
@@ -1892,6 +1904,7 @@ class YAD:
             >>> x = yad.execute(args=["--calendar","--day=15","--month=1","--year=2016"])
             >>> print(x)
         """
+        args = [] if args is None else args
         for generic_args in self.kwargs_helper(kwargs):
             try:
                 args.append("--%s" % generic_args)
