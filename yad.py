@@ -27,10 +27,10 @@ import os
 import re
 import sys
 import imghdr
-import random
 import pexpect
 import tempfile
 import locale
+import secrets
 
 __version__ = "0.9.14"
 
@@ -1648,7 +1648,7 @@ class YAD:
         """
         args = ["--notebook"]
         if not key:
-            key = random.randInt(10000, 20000)
+            key = secrets.SystemRandom().randInt(10000, 20000)
         args.append("--key=%d" % key)
 
         if tabpos in ["top", "bottom", "left", "right"]:
@@ -1776,7 +1776,7 @@ class YAD:
         """
         args = ["--paned"]
         if not key:
-            key = random.randInt(10000, 20000)
+            key = secrets.SystemRandom().randInt(10000, 20000)
         args.append("--key=%d" % key)
 
         if orient in ["horizontal", "vertical"]:
