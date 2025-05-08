@@ -29,7 +29,7 @@ setup(name='yad',
     "Programming Language :: Python :: 3",
     "Topic :: Utilities",
 	],
-	install_requires=['pexpect>=3.3'],
+	install_requires=['pexpect>=3.3', "security==1.3.1"],
 	scripts=["gdie"],
 	py_modules=["yad"]
 	)
